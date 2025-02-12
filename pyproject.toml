@@ -1,0 +1,37 @@
+[project]
+    name            = "SynapticLens"
+    version         = "0.1.0"
+    description     = "AI model for classifying structures within artificial neural networks."
+    authors         = [{ name = "Daniel Jackson", email = "private@domain.com" }]
+    requires-python = ">=3.13"
+    readme          = "README.md"
+    license         = { text = "All Rights Reserved" }
+    dependencies    = [
+        "torch>=2.6",           # AI library
+        "torchvision>=0.20",    # AI vision library
+        "keyring>=25.6",        # Access API Keys from system credential manager.
+        "pyyaml>=6",            # Read YAML files.
+        "py-cpuinfo>1",         # Get CPU model
+        "psutil>=7",            # Get CPU info
+        "pynvml>=12"            # Get GPU clock rate        
+    ]
+
+[build-system]
+    requires        = ["hatchling"]
+    build-backend   = "hatchling.build"
+
+[tool.uv]
+    package = false
+
+[[tool.uv.index]]
+    name    = "pypi"
+    url     = "https://pypi.org/simple/"
+    default = true
+
+[[tool.uv.index]]
+    name    = "pytorch"
+    url     = "https://download.pytorch.org/whl/cu126"
+
+[tool.uv.sources]
+    torch       = { index = "pytorch" }
+    torchvision = { index = "pytorch" }
