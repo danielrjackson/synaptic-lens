@@ -133,6 +133,6 @@ Parameter analysis offers several advantages over traditional methods of neural 
 
 By understanding the patterns in neural network parameters, SynapticLens aims to provide deeper insights into how artificial intelligence works and how we can build more effective AI systems.
 
-<!-- Links -->
+[//]: # (Links)
 [← Back to README]:                 ../README
 [Extending SynapticLens →]:         extending_doc

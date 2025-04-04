@@ -138,4 +138,4 @@ Future work will focus on:
 [//]: # (Links)
 [Core Concepts]:            docs/core_concepts_doc
 [Extending SynapticLens]:   docs/extending_doc
-[All Rights Reserved.]:          LICENSE
+[All Rights Reserved.]:     LICENSE
