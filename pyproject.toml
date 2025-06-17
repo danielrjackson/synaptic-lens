@@ -2,23 +2,37 @@
     name            = "SynapticLens"
     version         = "0.1.0"
     description     = "AI model for classifying structures within artificial neural networks."
-    authors         = [{ name = "Daniel Jackson", email = "private@domain.com" }]
-    requires-python = ">=3.13"
-    readme          = "README.md"
-    license         = { text = "All Rights Reserved" }
+    authors         = [{ name = "Daniel Jackson", email = "643707+danielrjackson@users.noreply.github.com" }]
+    requires-python = ">=3.13"      # Newest version of python
+    readme          = { file = "README.md", content-type = "text/markdown" }
+    license         = { file = "LICENSE.md" }
     dependencies    = [
-        "torch>=2.6",           # AI library
-        "torchvision>=0.20",    # AI vision library
-        "keyring>=25.6",        # Access API Keys from system credential manager.
-        "pyyaml>=6",            # Read YAML files.
-        "py-cpuinfo>1",         # Get CPU model
-        "psutil>=7",            # Get CPU info
-        "pynvml>=12"            # Get GPU clock rate        
+        "keyring>=25.6,<26",        # Access API Keys from system credential manager.
+        "pynvml>=12.0.0,<13",       # Get GPU clock rate
+        "psutil>=7.0.0,<8",         # Get CPU info
+        "pyyaml>=6.0.2,<7",         # Read YAML files.
+        "py-cpuinfo>=9.0.0,<10",    # Get CPU model
+        "torch>=2.6.0,<3",          # AI library
+        "torchvision>=0.21.0,<1",   # AI vision library
+        "transformers>=4.42.0,<5",  # Huggingface transformers library
+    ]
+
+[project.optional-dependencies]
+    dev = [
+        "coverage>=7.7.1,<8",       # Test coverage report
+        "hypothesis>=6.130.4,<7",   # Fuzzy testing
+        "pytest>=7.4.4,<8",         # Python testing library
     ]
 
 [build-system]
     requires        = ["hatchling"]
     build-backend   = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+    packages = ["src"]
+
+[tool.pytest.ini_options]
+    pythonpath = ["src"]
 
 [tool.uv]
     package = false

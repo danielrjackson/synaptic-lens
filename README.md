@@ -1,6 +1,8 @@
 # SynapticLens
 
-SynapticLens is an AI model for classifying structures within artificial neural networks. It treats neural network parameters as data that can be analyzed and classified to understand what makes networks effective for specific tasks.
+[SynapticLens] is an AI model for classifying structures within artificial neural networks. It
+treats neural network parameters as data that can be analyzed and classified to understand what
+makes networks effective for specific tasks.
 
 ## Project Vision
 
@@ -11,7 +13,8 @@ SynapticLens aims to develop a meta-learning approach that can:
 3. Identify which parameters are critical for specific network functionalities
 4. Eventually classify networks by their function, not just their architecture
 
-This approach is inspired by image recognition techniques, applying similar pattern recognition concepts to the parameter space of neural networks.
+This approach is inspired by image recognition techniques, applying similar pattern recognition
+concepts to the parameter space of neural networks.
 
 ## Features
 
@@ -32,7 +35,7 @@ SynapticLens uses Poetry for dependency management. To install:
 
 ```bash
 # Clone the repository
-git clone https://github.com/danielrjackson/synaptic_lens.git
+git clone https://github.com/danielrjackson/synapticlens.git
 cd synaptic_lens
 
 # Install dependencies using Poetry
@@ -56,7 +59,8 @@ python -m synaptic_lens.main --config path/to/config.yaml
 
 ### Configuration
 
-SynapticLens is configured using YAML files. The default configuration is located at `synaptic_lens/config/config.yaml`. This file contains settings for:
+SynapticLens is configured using YAML files. The default configuration is located at
+`synaptic_lens/config/config.yaml`. This file contains settings for:
 
 - Model loading options
 - Parameter encoding methods
@@ -122,7 +126,8 @@ synaptic_lens/
 
 ## Current Status
 
-The project currently supports analysis of transformer networks trained on the MNIST dataset. These networks serve as a proof of concept for the approach.
+The project currently supports analysis of transformer networks trained on the MNIST dataset. These
+networks serve as a proof of concept for the approach.
 
 Future work will focus on:
 
@@ -136,6 +141,7 @@ Future work will focus on:
 *Copyright © 2025 Daniel Jackson. [All Rights Reserved.]*
 
 [//]: # (Links)
+[SynapticLens]:             https://github.com/danielrjackson/SynapticLens
 [Core Concepts]:            docs/core_concepts_doc
 [Extending SynapticLens]:   docs/extending_doc
 [All Rights Reserved.]:     LICENSE

@@ -1,0 +1,55 @@
+# SynapticLens Configuration File
+
+# External Target Model Configurations
+target_models:
+  - name:             "MNIST"
+    architecture:     "Transformer"
+    purpose:          "Image Recognition"
+    desc:             "MNIST Handwritten Digit Recognition"
+    models_base_path: "C:/Users/Daniel/code/training_models/training_models/mnist/models"
+    model_file_type:  ".pth"
+    test:
+      base_path: "C:/Users/Daniel/code/training_models/training_models/mnist/data/MNIST/raw"
+      files:
+        data: "t10k-images-idx3-ubyte"
+        label: "t10k-labels-idx1-ubyte"
+
+# Model Loading Options
+model_loading:
+  max_models:           null  # Maximum number of models to process (null for all)
+  include_batch_models: true  # Whether to include intermediate batch models
+  cache_models:         true  # Whether to cache the model data and test files
+  cache_test_results:   true  # Whether to cache the model test results
+  cache_performance:    true  # Whether to cache model performance results
+
+# Parameter Encoding Options
+encoding:
+  representation_type:  "2d"  # Options: "2d" or "structured"
+  fixed_structure:      true  # Whether all models have the same structure
+  normalize_params:     true  # Whether to normalize parameters
+  cache_encodings:      true  # Whether to cache the parameter encodings
+
+# Analyzer Network Options
+analyzer:
+  hidden_dim:   256 # Hidden dimension size
+  dropout_rate: 0.5 # Dropout rate for regularization
+
+# Training Options
+training:
+  batch_size:     16    # Batch size for training
+  num_epochs:     50    # Number of training epochs
+  learning_rate:  0.001 # Learning rate
+  train_ratio:    0.8   # Train/validation split ratio
+  random_seed:    42    # Random seed for reproducibility
+
+# Visualization Options
+visualization:
+  show_plots: true  # Whether to display plots during execution
+  save_plots: true  # Whether to save plots to disk
+  plot_dpi:   300   # DPI for saved plots
+
+# Analysis Options
+analysis:
+  importance_analysis:    true  # Whether to perform parameter importance analysis
+  distribution_analysis:  true  # Whether to analyze parameter distributions
+  training_progress:      true  # Whether to visualize training progress
