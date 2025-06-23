@@ -1,5 +1,5 @@
 [project]
-    name            = "SynapticLens"
+    name            = "synapticlens"
     version         = "0.1.0"
     description     = "AI model for classifying structures within artificial neural networks."
     authors         = [{ name = "Daniel Jackson", email = "643707+danielrjackson@users.noreply.github.com" }]
