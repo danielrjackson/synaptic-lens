@@ -3,7 +3,7 @@ Target Model Loader
 
 This class is used to load target models for training the SynapticLens project.
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 import  os

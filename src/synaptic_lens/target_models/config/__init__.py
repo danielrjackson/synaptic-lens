@@ -3,7 +3,7 @@ Target Model Config Module
 
 This module contains paths for target model configuration files.
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 import os

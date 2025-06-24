@@ -6,7 +6,7 @@ The SynapticLens class loads neural network models, encodes their parameters, tr
 a network analyzer, and evaluates the analyzer on the models. It also analyzes the
 importance of parameters for predicting performance.
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 import os

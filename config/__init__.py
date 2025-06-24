@@ -3,7 +3,7 @@ SynapticLens Project Configuration
 
 This file contains paths for the SynapticLens project configuration files.
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 import os

@@ -12,7 +12,7 @@ Contains the configuration for a target model, including:
     - Test data file
     - Test label file
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 # Local package imports

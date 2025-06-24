@@ -8,7 +8,7 @@ Contains the configuration for a target model, including:
   - cache_test_results:   Whether to cache the model test results
   - cache_performance:    Whether to cache model performance results
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 # Local package imports

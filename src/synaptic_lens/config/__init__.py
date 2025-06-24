@@ -3,7 +3,7 @@ SynapticLens package configuration module.
 
 This module contains paths for the SynapticLens package configuration files.
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 import os

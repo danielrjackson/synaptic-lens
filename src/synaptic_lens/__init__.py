@@ -3,7 +3,7 @@ SynapticLens package initialization file.
 
 This file contains the SynapticLens package paths and configuration file paths.
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 import os

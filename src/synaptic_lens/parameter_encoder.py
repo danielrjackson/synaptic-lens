@@ -5,7 +5,7 @@ This file contains the ParameterEncoder class for encoding neural network parame
 into a standardized format for analysis. Supports both 2D grid representations and
 structured representations.
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 import torch

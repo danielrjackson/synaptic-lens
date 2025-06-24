@@ -11,7 +11,7 @@ Contains the configuration for a target model, including:
     - test_data_file:   The path to the test data file
     - test_label_file:  The path to the test label file
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 # Standard library imports

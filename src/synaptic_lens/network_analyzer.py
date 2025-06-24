@@ -3,7 +3,7 @@ Network Analyzer
 
 This file contains classes for analyzing neural network parameters and predicting performance metrics.
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 import torch

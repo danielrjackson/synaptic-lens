@@ -4,7 +4,7 @@ Visualization Utility Methods
 This module contains utility functions for visualizing neural network predictions,
 parameter importance, and training progress.
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 import torch

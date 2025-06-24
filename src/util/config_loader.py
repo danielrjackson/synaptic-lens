@@ -6,7 +6,7 @@ Handles loading and validation of SynapticLens configuration from YAML files.
 Attributes:
     ConfigLoader: Handles loading and validation of SynapticLens configuration from YAML files
 
-© 2025 Daniel Jackson
+Copyright 2025 Daniel Robert Jackson
 """
 
 # Standard Libraries
