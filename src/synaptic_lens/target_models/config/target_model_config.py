@@ -18,7 +18,7 @@ Contains the configuration for a target model, including:
 
 # Build file paths
 import os
-from typing import Optional, Dict
+from typing import Dict
 
 # Local package imports
 
@@ -44,7 +44,7 @@ class TargetModelConfig:
     """
 
     def __init__(self,
-                 model_config: Optional[Dict]):
+                 model_config: Dict | None):
         """
         Initialize the target model configuration.
 

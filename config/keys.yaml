@@ -10,7 +10,7 @@ keys:
   #- name: AnthropicClaude
   #  url: Anthropic_API
   #  username: Claude_Key
-  
+
   #- name: GithubToken
   #  url: Github
   #  username: Personal_Access_Token

@@ -19,7 +19,7 @@ import uuid
 from collections import defaultdict, OrderedDict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Mapping, MutableMapping, Optional, Set, Tuple
+from typing import Dict, List, Mapping, Set
 
 # ---------------------------------------------------------------------------
 # ↓↓↓                    Data-model primitives                       ↓↓↓
@@ -124,7 +124,7 @@ class KnowledgeGraph:
 
     # ---------------------  Queries  ---------------------
 
-    def resolve(self, alias_or_name: str) -> Optional[TagId]:
+    def resolve(self, alias_or_name: str) -> TagId | None:
         return self._alias_index.get(alias_or_name.strip().lower())
 
     def parents(self, tag_id: TagId) -> Set[TagId]:
@@ -208,7 +208,7 @@ def llm_tag_example(client: LLMClient, example_text: str, graph: KnowledgeGraph)
     return [alias.strip().lower() for alias in response.split(",") if alias.strip()]
 
 
-def llm_suggest_new_tags(client: LLMClient, example_text: str, graph: KnowledgeGraph) -> List[Tuple[str, str]]:
+def llm_suggest_new_tags(client: LLMClient, example_text: str, graph: KnowledgeGraph) -> List[tuple[str, str]]:
     """Let the LLM propose truly *new* tags (alias + short description)."""
     prompt = (
         "You may invent *new* skill tags if needed.\n"

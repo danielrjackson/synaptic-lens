@@ -16,7 +16,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List, Tuple, Optional
+from typing import Dict, Any, List
 from tqdm import tqdm
 from torch.utils.data import DataLoader, random_split
 
@@ -41,7 +41,7 @@ class SynapticLens:
     Analyzes neural network parameters to predict performance.
     """
 
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, config_path: str | None = None):
         """
         Initialize SynapticLens.
 
@@ -170,7 +170,7 @@ class SynapticLens:
 
         return self.dataset
 
-    def train_analyzer(self, dataset: NetworkDataset) -> Tuple[NetworkAnalyzer, Dict[str, List[float]]]:
+    def train_analyzer(self, dataset: NetworkDataset) -> tuple[NetworkAnalyzer, Dict[str, List[float]]]:
         """
         Train the network analyzer.
 
@@ -270,7 +270,7 @@ class SynapticLens:
         else:
             plt.close()
 
-    def evaluate_analyzer(self, test_loader: Optional[DataLoader] = None) -> Tuple[Dict[str, float], np.ndarray, np.ndarray]:
+    def evaluate_analyzer(self, test_loader: DataLoader | None = None) -> tuple[Dict[str, float], np.ndarray, np.ndarray]:
         """
         Evaluate the trained analyzer.
 

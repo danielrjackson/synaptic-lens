@@ -12,7 +12,7 @@ Attributes:
 # Standard Libraries
 import  os
 from    pathlib import Path
-from    typing import Any, Dict, List, Optional
+from    typing import Any, Dict, List
 
 # Third-party Libraries
 import  yaml
@@ -25,7 +25,7 @@ class ConfigLoader:
     def __init__(self,
                  config_path: str,
                  config_file: str = "config.yaml",
-                 required_sections: Optional[List[str]] = None):
+                 required_sections: List[str] | None = None):
         """
         Initialize the configuration loader.
 
@@ -54,7 +54,7 @@ class ConfigLoader:
         """
         return self.config
 
-    def save_config(self, config: Dict[str, Any], output_path: Optional[str] = None) -> None:
+    def save_config(self, config: Dict[str, Any], output_path: str | None = None) -> None:
         """
         Save configuration to YAML file.
 
