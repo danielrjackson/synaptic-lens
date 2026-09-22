@@ -14,14 +14,14 @@
         "py-cpuinfo>=9.0.0,<10",    # Get CPU model
         "torch>=2.6.0,<3",          # AI library
         "torchvision>=0.21.0,<1",   # AI vision library
-        "transformers>=4.42.0,<5",  # Huggingface transformers library
+        "transformers>=4.42.0,<6",  # Huggingface transformers library
     ]
 
 [project.optional-dependencies]
     dev = [
         "coverage>=7.7.1,<8",       # Test coverage report
         "hypothesis>=6.130.4,<7",   # Fuzzy testing
-        "pytest>=7.4.4,<8",         # Python testing library
+        "pytest>=7.4.4,<10",         # Python testing library
     ]
 
 [build-system]
