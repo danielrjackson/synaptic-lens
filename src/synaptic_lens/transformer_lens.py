@@ -243,6 +243,7 @@ class LensResponse:
     learned_capability: str = "unvalidated"
     information: str = "weights_and_declared_maximum"
     coverage: tuple[tuple[int, int], ...] = ()
+    baseline_logits: torch.Tensor | None = None
 
 
 class TransformerLens(nn.Module):
@@ -467,7 +468,7 @@ class TransformerLens(nn.Module):
             return LensResponse("unsupported", None, (), "Unimplemented measurement selector")
         queries = self.query_projection(torch.cat((cases, controls), dim=-1))
         queries = queries + self.selected_projection(selected)
-        values = []
+        values, baseline_logits = [], []
         for start in range(0, count, chunk_size):
             stop = min(start + chunk_size, count)
             readouts = queries.new_zeros(stop - start, self.config.width)
@@ -483,11 +484,12 @@ class TransformerLens(nn.Module):
                 )
                 readouts[local] = attended[0]
             result = self.readout(queries[start:stop] + readouts)
-            values.append(
-                self.baseline_head(result).sigmoid()
-                if query.mode == "baseline"
-                else self.intervention_head(result)
-            )
+            if query.mode == "baseline":
+                logits = self.baseline_head(result)
+                baseline_logits.append(logits)
+                values.append(logits.sigmoid())
+            else:
+                values.append(self.intervention_head(result))
         return LensResponse(
             "supported",
             torch.cat(values),
@@ -496,6 +498,7 @@ class TransformerLens(nn.Module):
             information="weights_only"
             if query.mode == "baseline"
             else "weights_and_declared_maximum",
+            baseline_logits=torch.cat(baseline_logits) if baseline_logits else None,
         )
 
 
