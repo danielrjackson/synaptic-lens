@@ -20,6 +20,21 @@ class ParameterLocation:
 
 
 @dataclass(frozen=True)
+class ScalarMaskMetadata:
+    """Audit/query metadata, never learned numeric input features."""
+
+    missing: bool = True
+    corruption_applied: bool = False
+    operator_version: str = "single-scalar-mask-v1"
+
+    def __post_init__(self):
+        if type(self.missing) is not bool or type(self.corruption_applied) is not bool:
+            raise ValueError("Mask flags must be explicit booleans")
+        if not isinstance(self.operator_version, str) or not self.operator_version:
+            raise ValueError("Mask operator version must be explicit")
+
+
+@dataclass(frozen=True)
 class AffineRecords:
     widths: tuple[int, ...]
     weights: tuple[torch.Tensor, ...]

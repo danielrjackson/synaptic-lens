@@ -10,7 +10,7 @@ from dataclasses import asdict, dataclass
 import torch
 from torch import nn
 
-from .target_records import AffineRecords, ParameterLocation
+from .target_records import AffineRecords, ParameterLocation, ScalarMaskMetadata
 
 TOKEN_SCHEMA = "affine-full-detail-features-v1"
 RELATIONS = (
@@ -230,6 +230,7 @@ class LensQuery:
     unit_sets: tuple[tuple[tuple[int, int], ...], ...] = ()
     operation_settings: tuple[tuple[str, float], ...] = ()
     hints: tuple[QueryHint, ...] = ()
+    mask_metadata: tuple[ScalarMaskMetadata, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -257,12 +258,21 @@ class TransformerLens(nn.Module):
         self.outgoing_binding = nn.Linear(config.width, config.width, bias=False)
         self.blocks = nn.ModuleList(ReaderBlock(config) for _ in range(config.blocks))
         self.encoder_norm = nn.LayerNorm(config.width)
+        self._initialize_readout()
+
+    def _initialize_readout(self):
+        config = self.config
         self.query_projection = nn.Linear(config.case_width + 5, config.width)
         self.selected_projection = nn.Linear(config.width, config.width, bias=False)
         self.readout_attention = nn.MultiheadAttention(config.width, config.heads, batch_first=True)
         self.readout = nn.Sequential(nn.Linear(config.width, config.width), nn.GELU())
         self.baseline_head = nn.Linear(config.width, 2)
         self.intervention_head = nn.Linear(config.width, 3)
+
+    def _tokenize(self, records, *, device, dtype):
+        return tokenize_target(
+            records, device=device, dtype=dtype, max_tokens=self.config.max_tokens
+        )
 
     def _encoder_parameters(self):
         prefixes = (
@@ -314,9 +324,7 @@ class TransformerLens(nn.Module):
                     saved.states, saved.valid, saved.tokens, self._versions(), key
                 )
         tokens = tuple(
-            tokenize_target(
-                r, device=parameter.device, dtype=parameter.dtype, max_tokens=self.config.max_tokens
-            )
+            self._tokenize(r, device=parameter.device, dtype=parameter.dtype)
             for r in records
         )
         count = max(t.features.shape[0] for t in tokens)
@@ -374,7 +382,7 @@ class TransformerLens(nn.Module):
             cache[key] = encoded
         return encoded
 
-    def predict(self, encoded: EncodedTargets, query: LensQuery, *, chunk_size=256):
+    def _validate_encoding(self, encoded: EncodedTargets):
         if encoded.encoder_versions != self._versions():
             raise ValueError("Encoder changed; recompute target encoding")
         if encoded.cache_key is not None and (self.training or torch.is_grad_enabled()):
@@ -385,6 +393,9 @@ class TransformerLens(nn.Module):
             and not encoded.states.requires_grad
         ):
             raise ValueError("Detached target states cannot supply encoder gradients")
+
+    def predict(self, encoded: EncodedTargets, query: LensQuery, *, chunk_size=256):
+        self._validate_encoding(encoded)
         if (
             query.schema != "lens-query-v1"
             or query.task != "addition-v1"
@@ -395,7 +406,10 @@ class TransformerLens(nn.Module):
         operation = "none" if query.mode == "baseline" else "clamp"
         if query.scope != scope or query.operation != operation or query.dose is not None:
             return LensResponse("unsupported", None, (), "Unimplemented scope or information level")
-        if query.parameter_references or query.unit_sets or query.operation_settings or query.hints:
+        if (
+            query.parameter_references or query.unit_sets or query.operation_settings
+            or query.hints or query.mask_metadata
+        ):
             return LensResponse("unsupported", None, (), "Unimplemented query extension")
         if chunk_size <= 0:
             raise ValueError("Query chunk size must be positive")
