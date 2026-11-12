@@ -1,0 +1,24 @@
+[project]
+name = "synaptic-lens"
+version = "0.3.0"
+description = "Structured neural-network weight records and query-based research readers"
+readme = "README.md"
+requires-python = ">=3.13"
+license = "LicenseRef-AI-Pubs-Research-use-RAIL-S-0.1"
+license-files = ["LICENSE.md", "LICENSE-MODEL.md", "NOTICE"]
+authors = [{name = "Daniel Jackson"}]
+dependencies = ["torch>=2.14"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests/core"]

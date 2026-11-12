@@ -211,6 +211,7 @@ class ScalarLens(TransformerLens):
             or query.directions is not None
             or query.maxima is not None
             or query.dose is not None
+            or query.dose_known is not None
             or query.hints
             or query.operation_settings
         ):

@@ -76,31 +76,34 @@ def test_four_type_location_decoding_and_coverage(location, local):
 
 
 @pytest.mark.parametrize("local", [False, True])
-def test_hidden_label_and_corrupted_numeric_value_cannot_change_features_or_prediction(local):
+@pytest.mark.parametrize("location", locations())
+def test_hidden_label_and_corrupted_numeric_value_cannot_change_features_or_prediction(
+    local, location
+):
     torch.manual_seed(8)
     clean = target()
     other = deepcopy(clean)
-    location = locations()[0]
-    with torch.no_grad():
-        other[0].weight[location.coordinate] = 12345
     first = masked_scalar(affine_relu_records(clean), location)
-    hidden_label_changed = masked_scalar(affine_relu_records(other), location)
-    corrupted = masked_scalar(
-        affine_relu_records(other), location, ScalarMaskMetadata(corruption_applied=True)
-    )
-    assert first.identity() == hidden_label_changed.identity()
-    assert first.identity() != corrupted.identity()
     reader = ScalarLens(config(relation_conditioned=True), local=local)
-    a, b, c = (reader.encode((r,)) for r in (first, hidden_label_changed, corrupted))
-    for after in (b, c):
-        torch.testing.assert_close(a.tokens[0].features, after.tokens[0].features, rtol=0, atol=0)
-        torch.testing.assert_close(a.states, after.states, rtol=0, atol=0)
-    predictions = [
-        reader.predict(e, query(location, r.mask_metadata)).values
-        for e, r in zip((a, b, c), (first, hidden_label_changed, corrupted))
-    ]
-    for after in predictions[1:]:
-        torch.testing.assert_close(predictions[0], after, rtol=0, atol=0)
+    a = reader.encode((first,))
+    expected = reader.predict(a, query(location)).values
+    for hidden_value in (0.0, -12345.0, 12345.0):
+        with torch.no_grad():
+            getattr(other[2 * location.owner], location.name)[location.coordinate] = hidden_value
+        changed = masked_scalar(affine_relu_records(other), location)
+        corrupted = masked_scalar(
+            affine_relu_records(other), location, ScalarMaskMetadata(corruption_applied=True)
+        )
+        assert first.identity() == changed.identity()
+        assert first.identity() != corrupted.identity()
+        for records in (changed, corrupted):
+            encoded = reader.encode((records,))
+            torch.testing.assert_close(
+                a.tokens[0].features, encoded.tokens[0].features, rtol=0, atol=0
+            )
+            torch.testing.assert_close(a.states, encoded.states, rtol=0, atol=0)
+            actual = reader.predict(encoded, query(location, records.mask_metadata)).values
+            torch.testing.assert_close(expected, actual, rtol=0, atol=0)
 
 
 def test_real_zero_and_single_missing_contract_and_query_metadata():
@@ -190,7 +193,7 @@ def test_scalar_prediction_commutes_with_hidden_renaming(local, location):
         reader.encode((masked_scalar(affine_relu_records(renamed), new_location),)),
         query(new_location),
     ).values
-    torch.testing.assert_close(a, b, rtol=1e-5, atol=1e-6)
+    torch.testing.assert_close(a, b, rtol=1e-6, atol=1e-6)
 
 
 def test_dynamic_width_padding_batch_query_indices_and_chunk_gradients():
@@ -211,7 +214,7 @@ def test_dynamic_width_padding_batch_query_indices_and_chunk_gradients():
     )
     before = reader.predict(batch, q, chunk_size=10)
     after = reader.predict(batch, q, chunk_size=1)
-    torch.testing.assert_close(before.values, after.values)
+    torch.testing.assert_close(before.values, after.values, rtol=1e-6, atol=1e-6)
     parameters = tuple(reader.parameters())
     a = torch.autograd.grad(before.normalized_values.square().mean(), parameters, retain_graph=True)
     b = torch.autograd.grad(after.normalized_values.square().mean(), parameters, retain_graph=True)
@@ -219,7 +222,9 @@ def test_dynamic_width_padding_batch_query_indices_and_chunk_gradients():
         torch.testing.assert_close(first, second, rtol=2e-4, atol=2e-6)
     for index, loc in enumerate((location, other_location)):
         alone = reader.predict(reader.encode((records[index],)), query(loc))
-        torch.testing.assert_close(before.values[index : index + 1], alone.values)
+        torch.testing.assert_close(
+            before.values[index : index + 1], alone.values, rtol=1e-6, atol=1e-6
+        )
     with pytest.raises(ValueError, match="Batched targets"):
         reader.predict(batch, query(location))
 

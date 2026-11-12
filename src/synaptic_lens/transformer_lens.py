@@ -10,6 +10,8 @@ from dataclasses import asdict, dataclass
 import torch
 from torch import nn
 
+from .reader_config import DedicatedBoundaryReaderConfig as DedicatedBoundaryReaderConfig
+from .reader_config import ReaderConfig
 from .target_records import AffineRecords, ParameterLocation, ScalarMaskMetadata
 
 TOKEN_SCHEMA = "affine-full-detail-features-v1"
@@ -20,33 +22,6 @@ RELATIONS = (
     "destination_to_edge",
     "same_operation",
 )
-
-
-@dataclass(frozen=True)
-class ReaderConfig:
-    case_width: int = 20
-    width: int = 128
-    heads: int = 4
-    blocks: int = 2
-    feedforward_multiplier: int = 4
-    max_tokens: int = 4096
-    relation_conditioned: bool = False
-
-    def __post_init__(self):
-        if (
-            min(
-                self.case_width,
-                self.width,
-                self.heads,
-                self.blocks,
-                self.feedforward_multiplier,
-                self.max_tokens,
-            )
-            <= 0
-        ):
-            raise ValueError("Reader dimensions and budgets must be positive")
-        if self.width % self.heads:
-            raise ValueError("Reader width must be divisible by head count")
 
 
 @dataclass(frozen=True)
@@ -61,6 +36,52 @@ class TargetTokens:
     target_identity: str
     numeric_parameters: int
     observed_parameters: int
+
+
+class UnsupportedBoundaryError(ValueError):
+    """The encoded target does not expose a valid required boundary region."""
+
+
+def boundary_attention_masks(tokens: TargetTokens, valid: torch.Tensor):
+    """Return valid input/output unit-plus-edge masks from token roles and incidence."""
+    features = tokens.features
+    if valid.ndim != 1 or len(valid) < features.shape[0] or valid.dtype != torch.bool:
+        raise ValueError("Boundary validity mask does not match the target tokens")
+    token_valid = valid[: features.shape[0]]
+    unit = features[:, 0] > 0.5
+    edge = features[:, 1] > 0.5
+    input_role = features[:, 2] > 0.5
+    output_role = features[:, 3] > 0.5
+    input_units = unit & input_role & token_valid
+    output_units = unit & output_role & token_valid
+    if not bool(input_units.any()):
+        raise UnsupportedBoundaryError("Missing required input-unit region")
+    if not bool(output_units.any()):
+        raise UnsupportedBoundaryError("Missing required output-unit region")
+
+    edge_indices = torch.where(edge & token_valid)[0]
+    if edge_indices.numel():
+        sources = tokens.sources.to(device=valid.device)[edge_indices]
+        destinations = tokens.destinations.to(device=valid.device)[edge_indices]
+        if bool(((sources < 0) | (sources >= features.shape[0]) |
+                 (destinations < 0) | (destinations >= features.shape[0])).any()):
+            raise UnsupportedBoundaryError("Boundary edge has missing endpoint incidence")
+        input_source = unit[sources] & input_role[sources] & valid[sources]
+        output_destination = unit[destinations] & output_role[destinations] & valid[destinations]
+        input_edges = torch.zeros_like(token_valid)
+        output_edges = torch.zeros_like(token_valid)
+        input_edges[edge_indices] = input_source
+        output_edges[edge_indices] = output_destination
+    else:
+        input_edges = output_edges = torch.zeros_like(token_valid)
+
+    input_mask = torch.zeros_like(valid)
+    output_mask = torch.zeros_like(valid)
+    input_mask[: features.shape[0]] = (input_units | input_edges) & token_valid
+    output_mask[: features.shape[0]] = (output_units | output_edges) & token_valid
+    if not bool(input_mask.any()) or not bool(output_mask.any()):
+        raise UnsupportedBoundaryError("Required boundary region has no valid attention tokens")
+    return input_mask, output_mask
 
 
 def tokenize_target(records: AffineRecords, *, device, dtype, max_tokens: int) -> TargetTokens:
@@ -231,6 +252,7 @@ class LensQuery:
     operation_settings: tuple[tuple[str, float], ...] = ()
     hints: tuple[QueryHint, ...] = ()
     mask_metadata: tuple[ScalarMaskMetadata, ...] = ()
+    dose_known: torch.Tensor | None = None
 
 
 @dataclass(frozen=True)
@@ -262,9 +284,24 @@ class TransformerLens(nn.Module):
 
     def _initialize_readout(self):
         config = self.config
-        self.query_projection = nn.Linear(config.case_width + 5, config.width)
+        self.query_projection = nn.Linear(
+            config.case_width + 5 + 2 * int(config.dose_input), config.width
+        )
         self.selected_projection = nn.Linear(config.width, config.width, bias=False)
         self.readout_attention = nn.MultiheadAttention(config.width, config.heads, batch_first=True)
+        if getattr(config, "dedicated_boundary_attention", False):
+            self.input_attention = nn.MultiheadAttention(
+                config.width, config.heads, batch_first=True
+            )
+            self.output_attention = nn.MultiheadAttention(
+                config.width, config.heads, batch_first=True
+            )
+            self.input_residual = nn.Linear(config.width, config.width)
+            self.output_residual = nn.Linear(config.width, config.width)
+            nn.init.zeros_(self.input_residual.weight)
+            nn.init.zeros_(self.input_residual.bias)
+            nn.init.zeros_(self.output_residual.weight)
+            nn.init.zeros_(self.output_residual.bias)
         self.readout = nn.Sequential(nn.Linear(config.width, config.width), nn.GELU())
         self.baseline_head = nn.Linear(config.width, 2)
         self.intervention_head = nn.Linear(config.width, 3)
@@ -404,8 +441,10 @@ class TransformerLens(nn.Module):
             return LensResponse("unsupported", None, (), "Unimplemented task or query mode")
         scope = "whole_target" if query.mode == "baseline" else "individual_unit"
         operation = "none" if query.mode == "baseline" else "clamp"
-        if query.scope != scope or query.operation != operation or query.dose is not None:
+        if query.scope != scope or query.operation != operation:
             return LensResponse("unsupported", None, (), "Unimplemented scope or information level")
+        if not self.config.dose_input and (query.dose is not None or query.dose_known is not None):
+            return LensResponse("unsupported", None, (), "Dose inputs require a dose-aware reader")
         if (
             query.parameter_references or query.unit_sets or query.operation_settings
             or query.hints or query.mask_metadata
@@ -443,10 +482,13 @@ class TransformerLens(nn.Module):
             return LensResponse(
                 "partial", None, (), "Target numeric coverage is incomplete", coverage=coverage
             )
-        controls = cases.new_zeros(count, 5)
+        controls = cases.new_zeros(count, 5 + 2 * int(self.config.dose_input))
         selected = encoded.states.new_zeros(count, self.config.width)
         if query.mode == "baseline":
-            if query.unit_references or query.directions is not None or query.maxima is not None:
+            if (
+                query.unit_references or query.directions is not None or query.maxima is not None
+                or query.dose is not None or query.dose_known is not None
+            ):
                 raise ValueError("Baseline query contains intervention settings")
             controls[:, 0] = 1
             measurements = ("pass_probability", "correct_answer_probability")
@@ -477,9 +519,34 @@ class TransformerLens(nn.Module):
             controls[:, 2] = (directions == -1).to(cases.dtype)
             controls[:, 3] = (directions == 1).to(cases.dtype)
             controls[:, 4] = maxima.to(cases.dtype)
+            if self.config.dose_input:
+                if query.dose is None or query.dose_known is None:
+                    raise ValueError("Dose and explicit availability are required together")
+                dose, known = query.dose.to(cases.device), query.dose_known.to(cases.device)
+                if (
+                    dose.dtype != torch.float32 or known.dtype != torch.bool
+                    or dose.shape != (count,) or known.shape != (count,)
+                    or not bool(torch.isfinite(dose).all())
+                    or bool((dose[~known] != 0).any())
+                ):
+                    raise ValueError("Invalid signed dose or availability placeholder")
+                tolerance = 8 * torch.finfo(torch.float32).eps * maxima.abs().clamp_min(1)
+                if bool((known & (dose * directions < -tolerance)).any()):
+                    raise ValueError("Signed dose contradicts intervention direction")
+                controls[:, 5] = dose.to(cases.dtype)
+                controls[:, 6] = known.to(cases.dtype)
             measurements = ("probability_change", "pass_change", "margin_change")
         if query.measurement_bundle and query.measurement_bundle != measurements:
             return LensResponse("unsupported", None, (), "Unimplemented measurement selector")
+        boundary_masks = {}
+        if getattr(self.config, "dedicated_boundary_attention", False):
+            try:
+                for target in indices.unique().tolist():
+                    boundary_masks[target] = boundary_attention_masks(
+                        encoded.tokens[target], encoded.valid[target]
+                    )
+            except UnsupportedBoundaryError as error:
+                return LensResponse("unsupported", None, (), str(error))
         queries = self.query_projection(torch.cat((cases, controls), dim=-1))
         queries = queries + self.selected_projection(selected)
         values, baseline_logits = [], []
@@ -496,7 +563,31 @@ class TransformerLens(nn.Module):
                     key_padding_mask=~encoded.valid[target : target + 1],
                     need_weights=False,
                 )
-                readouts[local] = attended[0]
+                combined = attended[0]
+                if getattr(self.config, "dedicated_boundary_attention", False):
+                    input_mask, output_mask = boundary_masks[target]
+                    if self.config.boundary_attention_mode == "all_valid":
+                        input_mask = output_mask = encoded.valid[target]
+                    input_readout, _ = self.input_attention(
+                        queries[start:stop][local][None, :, :],
+                        encoded.states[target : target + 1],
+                        encoded.states[target : target + 1],
+                        key_padding_mask=~input_mask[None, :],
+                        need_weights=False,
+                    )
+                    output_readout, _ = self.output_attention(
+                        queries[start:stop][local][None, :, :],
+                        encoded.states[target : target + 1],
+                        encoded.states[target : target + 1],
+                        key_padding_mask=~output_mask[None, :],
+                        need_weights=False,
+                    )
+                    combined = (
+                        combined
+                        + self.input_residual(input_readout[0])
+                        + self.output_residual(output_readout[0])
+                    )
+                readouts[local] = combined
             result = self.readout(queries[start:stop] + readouts)
             if query.mode == "baseline":
                 logits = self.baseline_head(result)
@@ -511,7 +602,8 @@ class TransformerLens(nn.Module):
             coverage=coverage,
             information="weights_only"
             if query.mode == "baseline"
-            else "weights_and_declared_maximum",
+            else "weights_maximum_and_explicit_dose_availability"
+            if self.config.dose_input else "weights_and_declared_maximum",
             baseline_logits=torch.cat(baseline_logits) if baseline_logits else None,
         )
 

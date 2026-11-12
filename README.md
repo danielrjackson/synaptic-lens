@@ -7,6 +7,7 @@ Research software for asking what a neural network's weights reveal about its be
 - Exact records of supported affine/ReLU networks, with explicit parameter coverage and unsupported-input checks.
 - Paired attention readers over network records, separating target encoding from queried outputs.
 - A value-blind masked-scalar reader and local graph-context control.
+- Detached allocation policies, antithetic optimizer updates, ranking/AUC and table export.
 - Small deterministic tests for numeric coverage, masking, permutations, queries and reconstruction contracts.
 
 These are research components, not a general-purpose interpreter for arbitrary models. Implementing a query interface or passing a unit test does not establish learned predictive accuracy, causal localization or generalization. Attention weights alone are not explanations.
@@ -16,11 +17,14 @@ These are research components, not a general-purpose interpreter for arbitrary m
 Use Python 3.13 or later in a virtual environment. Install a CPU-compatible PyTorch build for your platform and pytest. For a default installation:
 
 ```sh
-python -m pip install torch pytest
+python -m pip install -e ".[test]"
 python examples/inspect_target.py
+python examples/synthetic_allocation.py
 ```
 
-The example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs. It does not train a reader or demonstrate learned prediction. No GPU, downloaded model, account, external service or model checkpoint is required.
+The first example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs. It does not train a reader or demonstrate learned prediction. No GPU, downloaded model, account, external service or model checkpoint is required.
+
+The second example computes normalized allocation weights from synthetic losses; it does not establish improved training performance. [Public scope and validation](docs/PUBLIC_SCOPE.md) describe the included interfaces, intentional omissions and tested environment.
 
 To run the selected core tests from the repository root:
 

@@ -1,5 +1,5 @@
 from copy import deepcopy
-from dataclasses import replace
+from dataclasses import asdict, replace
 
 import pytest
 import torch
@@ -7,9 +7,11 @@ from torch import nn
 
 from synaptic_lens.target_records import ParameterLocation, affine_relu_records
 from synaptic_lens.transformer_lens import (
+    DedicatedBoundaryReaderConfig,
     LensQuery,
     ReaderConfig,
     TransformerLens,
+    boundary_attention_masks,
     matched_readers,
     tokenize_target,
 )
@@ -17,6 +19,12 @@ from synaptic_lens.transformer_lens import (
 
 def config(**options):
     return ReaderConfig(case_width=3, width=16, heads=4, blocks=2, max_tokens=128, **options)
+
+
+def dedicated_config(**options):
+    return DedicatedBoundaryReaderConfig(
+        case_width=3, width=16, heads=4, blocks=2, max_tokens=128, **options
+    )
 
 
 def target(hidden=4):
@@ -70,6 +78,21 @@ def test_matched_initial_function_and_common_parameters():
         torch.testing.assert_close(value, relation.state_dict()[name], rtol=0, atol=0)
     assert sum(p.numel() for p in relation.parameters()) > sum(
         p.numel() for p in content.parameters()
+    )
+
+
+def test_baseline_raw_logits_support_stable_training_without_changing_outputs():
+    records = affine_relu_records(target())
+    reader = TransformerLens(config())
+    with torch.no_grad():
+        reader.baseline_head.weight.zero_()
+        reader.baseline_head.bias.fill_(-1000)
+    response = reader.predict(reader.encode((records,)), LensQuery(torch.zeros(2, 3)))
+    assert response.baseline_logits.eq(-1000).all()
+    assert response.values.eq(0).all()
+    assert (
+        reader.predict(reader.encode((records,)), role_query(torch.zeros(2, 3))).baseline_logits
+        is None
     )
 
 
@@ -268,3 +291,109 @@ def test_common_binding_retains_neuron_correspondence_with_equal_biases():
     encoded = reader.encode((affine_relu_records(model),))
     # Equal biases and equal incoming sums must not erase distinct source assignments.
     assert not torch.allclose(encoded.states[0, 3], encoded.states[0, 4])
+
+
+def test_dedicated_boundary_masks_follow_roles_and_edge_incidence():
+    records = affine_relu_records(target())
+    reader = TransformerLens(dedicated_config())
+    encoded = reader.encode((records,))
+    input_mask, output_mask = boundary_attention_masks(
+        encoded.tokens[0], encoded.valid[0]
+    )
+
+    # Three inputs, four hidden units, two outputs, then row-major edge tokens.
+    assert torch.where(input_mask)[0].tolist() == list(range(3)) + list(range(9, 21))
+    assert torch.where(output_mask)[0].tolist() == list(range(7, 9)) + list(range(21, 29))
+    assert not input_mask[21:].logical_and(output_mask[21:]).any()
+
+
+def test_dedicated_boundary_masks_overlap_for_no_hidden_layer_edges():
+    records = affine_relu_records(nn.Sequential(nn.Linear(3, 2)))
+    reader = TransformerLens(dedicated_config())
+    encoded = reader.encode((records,))
+    input_mask, output_mask = boundary_attention_masks(
+        encoded.tokens[0], encoded.valid[0]
+    )
+    edge_start = encoded.tokens[0].units
+
+    assert input_mask[edge_start:edge_start + 6].all()
+    assert output_mask[edge_start:edge_start + 6].all()
+    assert (input_mask & output_mask).sum().item() == 6
+
+
+def test_dedicated_attention_preserves_legacy_checkpoint_function_and_state_names():
+    torch.manual_seed(41)
+    config_legacy = config()
+    legacy = TransformerLens(config_legacy).eval()
+    expanded = TransformerLens(DedicatedBoundaryReaderConfig(**asdict(config_legacy))).eval()
+    loaded = expanded.load_state_dict(legacy.state_dict(), strict=False)
+    assert not loaded.unexpected_keys
+    assert set(loaded.missing_keys) == {
+        name for name, _ in expanded.named_parameters()
+        if name.startswith(("input_attention.", "output_attention.",
+                            "input_residual.", "output_residual."))
+    }
+    assert all(parameter.requires_grad for parameter in expanded.parameters())
+
+    records = affine_relu_records(target())
+    cases = torch.randn(9, 3)
+    for query in (LensQuery(cases), role_query(cases)):
+        original = legacy.predict(legacy.encode((records,)), query)
+        matched = expanded.predict(expanded.encode((records,)), query)
+        torch.testing.assert_close(matched.baseline_logits, original.baseline_logits,
+                                   rtol=1e-5, atol=1e-6) if query.mode == "baseline" else None
+        torch.testing.assert_close(matched.values, original.values, rtol=1e-5, atol=1e-6)
+
+
+def test_dedicated_attention_staged_gradient_flow_reaches_attention_after_residual_update():
+    torch.manual_seed(42)
+    reader = TransformerLens(dedicated_config())
+    optimizer = torch.optim.AdamW(reader.parameters(), lr=1e-3)
+    records = affine_relu_records(target())
+    query = LensQuery(torch.randn(5, 3))
+
+    reader.predict(reader.encode((records,)), query).values.square().mean().backward()
+    assert reader.input_residual.weight.grad.abs().sum() > 0
+    assert reader.output_residual.weight.grad.abs().sum() > 0
+    assert reader.input_attention.in_proj_weight.grad.abs().sum() == 0
+    assert reader.output_attention.in_proj_weight.grad.abs().sum() == 0
+    optimizer.step()
+    optimizer.zero_grad(set_to_none=True)
+
+    reader.predict(reader.encode((records,)), query).values.square().mean().backward()
+    assert reader.input_attention.in_proj_weight.grad.abs().sum() > 0
+    assert reader.output_attention.in_proj_weight.grad.abs().sum() > 0
+
+
+def test_dedicated_attention_masks_exclude_padding_and_missing_boundary_is_explicit():
+    reader = TransformerLens(dedicated_config())
+    small = affine_relu_records(nn.Sequential(nn.Linear(3, 2), nn.ReLU(), nn.Linear(2, 2)))
+    large = affine_relu_records(
+        nn.Sequential(nn.Linear(3, 4), nn.ReLU(), nn.Linear(4, 5), nn.ReLU(), nn.Linear(5, 2))
+    )
+    encoded = reader.encode((small, large))
+    input_mask, output_mask = boundary_attention_masks(
+        encoded.tokens[0], encoded.valid[0]
+    )
+    assert not input_mask[encoded.valid[0].logical_not()].any()
+    assert not output_mask[encoded.valid[0].logical_not()].any()
+
+    missing_features = encoded.tokens[0].features.clone()
+    missing_features[:, 2] = 0
+    missing_tokens = replace(encoded.tokens[0], features=missing_features)
+    missing = replace(encoded, tokens=(missing_tokens, encoded.tokens[1]))
+    response = reader.predict(
+        missing, LensQuery(torch.randn(1, 3), target_indices=torch.tensor([0]))
+    )
+    assert response.status == "unsupported"
+    assert response.reason == "Missing required input-unit region"
+
+    malformed_sources = encoded.tokens[0].sources.clone()
+    malformed_sources[-1] = encoded.tokens[0].features.shape[0]
+    malformed_tokens = replace(encoded.tokens[0], sources=malformed_sources)
+    malformed = replace(encoded, tokens=(malformed_tokens, encoded.tokens[1]))
+    response = reader.predict(
+        malformed, LensQuery(torch.randn(1, 3), target_indices=torch.tensor([0]))
+    )
+    assert response.status == "unsupported"
+    assert response.reason == "Boundary edge has missing endpoint incidence"
