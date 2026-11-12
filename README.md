@@ -43,6 +43,15 @@ python -m pytest tests/core -q -o pythonpath=src
 
 For platform-specific PyTorch installation options, see the [official installation guide](https://pytorch.org/get-started/locally/).
 
+## Trained Lens milestones
+
+The [milestone catalog](docs/milestones/README.md) separates arithmetic-target
+readers from weights-only observers of image-recognition targets. It documents
+selected trained checkpoints, exact input contracts, saved comparisons (including
+negative results), and hash-verified local inference commands. Checkpoint files
+are not yet hosted: the inference commands require matching local artifacts.
+Image-fed Lens experiments are excluded.
+
 ## Models and reproducibility
 
 Pretrained checkpoints and large research artifacts are not included. No public artifact download is currently established by this repository. The example and core unit tests generate their own small inputs and do not depend on those artifacts. Reproducing trained-model research findings requires the relevant checkpoint, dataset and protocol; the runnable example must not be mistaken for that reproduction.
