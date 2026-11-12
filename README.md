@@ -1,0 +1,51 @@
+# Synaptic Lens
+
+Research software for asking what a neural network's weights reveal about its behavior. The project builds structured representations of a target network and trains separate readers to answer questions about that target.
+
+## What is here
+
+- Exact records of supported affine/ReLU networks, with explicit parameter coverage and unsupported-input checks.
+- Paired attention readers over network records, separating target encoding from queried outputs.
+- A value-blind masked-scalar reader and local graph-context control.
+- Small deterministic tests for numeric coverage, masking, permutations, queries and reconstruction contracts.
+
+These are research components, not a general-purpose interpreter for arbitrary models. Implementing a query interface or passing a unit test does not establish learned predictive accuracy, causal localization or generalization. Attention weights alone are not explanations.
+
+## Try a small CPU example
+
+Use Python 3.13 or later in a virtual environment. Install a CPU-compatible PyTorch build for your platform and pytest. For a default installation:
+
+```sh
+python -m pip install torch pytest
+python examples/inspect_target.py
+```
+
+The example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs. It does not train a reader or demonstrate learned prediction. No GPU, downloaded model, account, external service or model checkpoint is required.
+
+To run the selected core tests from the repository root:
+
+```sh
+python -m pytest tests/core -q -o pythonpath=src
+```
+
+For platform-specific PyTorch installation options, see the [official installation guide](https://pytorch.org/get-started/locally/).
+
+## Models and reproducibility
+
+Pretrained checkpoints and large research artifacts are not included. No public artifact download is currently established by this repository. The example and core unit tests generate their own small inputs and do not depend on those artifacts. Reproducing trained-model research findings requires the relevant checkpoint, dataset and protocol; the runnable example must not be mistaken for that reproduction.
+
+## Project and history
+
+Daniel Jackson develops Synaptic Lens as an independent research project. This repository contains a deliberately selected development history and a curated distribution, not a complete record of every experiment or development step. Selected historical commits retain original source authorship and author dates; curation is recorded separately.
+
+[Selected references](docs/REFERENCES.md) explain which sources informed the reader design and which algorithms/software the project uses. They distinguish design motivation from reproduction or validated capability. A [BibTeX bibliography](docs/references.bib) is included.
+
+## License and citation
+
+The source code uses the unmodified [AI Pubs research-use RAIL-S license, Version 0.1, March 2, 2023](LICENSE.md). Its permitted purpose is academic or research use only, subject to the full license and use restrictions. This is not a general noncommercial-use license; it does not categorically prohibit ICE or all weapons uses. Retain the attribution in [NOTICE](NOTICE).
+
+The companion unmodified [AI Pubs research-use RAIL-M license, Version 0.1](LICENSE-MODEL.md) applies only to model files expressly designated in a release manifest or model card. It does not license complementary software or documentation, datasets, or third-party materials. Its inclusion here does not license absent checkpoints. These are use-restricted licenses, not OSI-approved open-source licenses.
+
+Third-party dependencies and separately licensed materials retain their own licenses. Earlier copies remain subject to the terms under which they were provided.
+
+If you use the software in research, please cite this repository and the revision used. [CITATION.cff](CITATION.cff) provides citation metadata; this citation request is not an additional license condition.
