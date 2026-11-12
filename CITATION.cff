@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software in research, please cite this repository and the revision you used."
+type: software
+version: 0.3.0
+title: "Synaptic Lens"
+authors:
+  - family-names: Jackson
+    given-names: Daniel
+repository-code: "https://github.com/danielrjackson/synaptic-lens"
+license-url: "https://github.com/danielrjackson/synaptic-lens/blob/main/LICENSE.md"
