@@ -1,0 +1,18 @@
+{
+  "structured-observer": {
+    "source_report_sha256": "fc114091667c5badb5e81df5b275b227c13019445fe34a2baa3a1e726a7cfd63",
+    "curation": "Reported saved-result summary, not a new run or independent recomputation."
+  },
+  "boundary-attention": {
+    "source_report_sha256": "4225634438941238be61283f237576dc1868f7de7451802263758e8947dc53d6",
+    "curation": "Reported saved-result summary, not a new run or independent recomputation."
+  },
+  "allocation": {
+    "source_report_sha256": "f3e6e9821a7208ed92b4a607c077991a29402b6f3edede2b5c26680657696515",
+    "curation": "Reported saved-result summary, not a new run or independent recomputation."
+  },
+  "family-validation": {
+    "source_report_sha256": "e8525afe58d9dd8a1b2add7f4749ffabf2a1381a415f99fcff0f8a8070b55fc7",
+    "curation": "Reported saved-result summary, not a new run or independent recomputation."
+  }
+}

@@ -2,8 +2,14 @@
 
 Research software for asking what a neural network's weights reveal about its behavior. The project builds structured representations of a target network and trains separate readers to answer questions about that target.
 
+## Research highlights
+
+The work spans weights-only competence prediction, query-based attention readers, and controlled allocation of training effort. [Selected research results](docs/RESULTS.md) present the evidence and contrary findings: a structured observer outperformed strong shortcut baselines in a narrow output-rewiring study; regional attention improved probability estimates without establishing reliable query localization; learned allocation showed mixed gains at substantial probe cost. These are historical controlled studies, not broad interpretability claims.
+
 ## What is here
 
+- Raw-weight and neuron-invariant learned observers, train-only normalization, validation selection, statistics-ridge baselines and whole-run uncertainty estimates.
+- Deterministic training-prefix continuation with model, optimizer and sampler snapshots.
 - Exact records of supported affine/ReLU networks, with explicit parameter coverage and unsupported-input checks.
 - Paired attention readers over network records, separating target encoding from queried outputs.
 - A value-blind masked-scalar reader and local graph-context control.
@@ -18,13 +24,16 @@ Use Python 3.13 or later in a virtual environment. Install a CPU-compatible PyTo
 
 ```sh
 python -m pip install -e ".[test]"
+python examples/train_observer.py
 python examples/inspect_target.py
 python examples/synthetic_allocation.py
 ```
 
-The first example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs. It does not train a reader or demonstrate learned prediction. No GPU, downloaded model, account, external service or model checkpoint is required.
+The learned-observer example generates small addition networks, keeps whole target runs in separate train/validation/test partitions, and fits raw/structured observers against statistics-ridge and train-mean controls. It uses a fixed small CPU budget and automatically removes temporary targets. It reports whatever wins, including baselines: it is an executable workflow, not reproduction of the historical study scores.
 
-The second example computes normalized allocation weights from synthetic losses; it does not establish improved training performance. [Public scope and validation](docs/PUBLIC_SCOPE.md) describe the included interfaces, intentional omissions and tested environment.
+The record-inspection example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs. It does not train a reader or demonstrate learned prediction. No GPU, downloaded model, account, external service or model checkpoint is required.
+
+The allocation example computes normalized allocation weights from synthetic losses; it does not establish improved training performance. [Public scope and validation](docs/PUBLIC_SCOPE.md) describe the included interfaces, intentional omissions and tested environment.
 
 To run the selected core tests from the repository root:
 

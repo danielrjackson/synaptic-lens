@@ -1,0 +1,61 @@
+{
+  "study": "SYN53",
+  "population": "6400 DEV states, 16 families; 2106 mixed states for AUROC",
+  "comparison": "one matched fork, 12800 added updates per arm",
+  "interval": "pointwise 95% whole-family bootstrap, 1000 PCG64(7) draws",
+  "metrics": [
+    {
+      "metric": "within_animal_auc",
+      "capacity_control": 0.60477,
+      "regional": 0.60708,
+      "difference_ci95": [
+        -0.00242,
+        0.00702
+      ]
+    },
+    {
+      "metric": "balanced_accuracy",
+      "capacity_control": 0.9609,
+      "regional": 0.9643,
+      "difference_ci95": [
+        -0.0007,
+        0.0084
+      ]
+    },
+    {
+      "metric": "brier",
+      "capacity_control": 0.0321,
+      "regional": 0.02733,
+      "difference_ci95": [
+        -0.00813,
+        -0.00184
+      ]
+    },
+    {
+      "metric": "equal_family_ece",
+      "capacity_control": 0.0308,
+      "regional": 0.01581,
+      "difference_ci95": [
+        -0.02051,
+        -0.00955
+      ]
+    },
+    {
+      "metric": "q_mae",
+      "capacity_control": 0.05107,
+      "regional": 0.03378,
+      "difference_ci95": [
+        -0.02334,
+        -0.01146
+      ]
+    }
+  ],
+  "paired_clone_auc": {
+    "control": 0.51869,
+    "regional": 0.5035,
+    "difference_ci95": [
+      -0.02391,
+      -0.00741
+    ]
+  }
+}

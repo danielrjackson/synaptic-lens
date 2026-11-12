@@ -1,0 +1,51 @@
+{
+  "study": "SYN57",
+  "population": "142 fixed DEV states, 16 families, one learner seed",
+  "rows": [
+    {
+      "policy": "uniform",
+      "accepted_updates": 25600,
+      "within_animal_auc": 0.4655,
+      "brier": 0.247,
+      "accuracy": 0.7211,
+      "state_mean_q_mae": 0.2601
+    },
+    {
+      "policy": "sqrt_loss",
+      "accepted_updates": 25600,
+      "within_animal_auc": 0.5129,
+      "brier": 0.1773,
+      "accuracy": 0.8899,
+      "state_mean_q_mae": 0.2488
+    },
+    {
+      "policy": "learned",
+      "accepted_updates": 25600,
+      "within_animal_auc": 0.5764,
+      "brier": 0.1485,
+      "accuracy": 0.8342,
+      "state_mean_q_mae": 0.1372
+    },
+    {
+      "policy": "uniform_long",
+      "accepted_updates": 128000,
+      "within_animal_auc": 0.6799,
+      "brier": 0.0649,
+      "accuracy": 0.9246,
+      "state_mean_q_mae": 0.0558
+    }
+  ],
+  "learned_total_updates_including_probes": 91648,
+  "rare_positive_recall_all_arms": {
+    "recognized": 0,
+    "support": 537
+  },
+  "later_family_validation": {
+    "mixed_state_auc_original_p2": 0.597,
+    "mixed_state_auc_joint400": 0.535,
+    "mean_bce_original_p2": 0.332,
+    "mean_bce_joint400": 1.326,
+    "families": 6,
+    "scope": "development-exposed transfer check, not pristine holdout"
+  }
+}
