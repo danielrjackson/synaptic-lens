@@ -18,6 +18,12 @@ CHECKPOINTS = {
     "syn53-control": "9dd0baffc515d481fafb62a33a1189e1526c21f1648515755da7caa26a357bd9",
     "syn53-regional": "119c4139203a19d2a9a134ebc568e8b2b5f534c34450b9cb0737a0b18713eb85",
 }
+INFERENCE_CHECKPOINTS = {
+    "mnist-raw": "8a3ad72f3ba64261e5d49168701fdc5edf19a6808f8a78c8e1fe076a6e78a32f",
+    "mnist-statistics": "c871b34578fd1347e778670ad41d6d2ade69bb7ebf0464fad8a75d5dcaf05ca1",
+    "syn53-control": "178ae78847ceabc38574461bd63557a590ebac65daa7f5ae13eb94c4fa8f97ba",
+    "syn53-regional": "906e8a26fb0a885bb5d6cb4bb360f15c48a3553201dbd07fbb3d73845e6fdf51",
+}
 MNIST_SCHEMA_SHA256 = "36e6ab0e0a61bf01246a6c303fc7d0a96ef8cc916fec4ce297412908a042a1c4"
 
 
@@ -48,11 +54,14 @@ def load_verified(path, sha256, *, legacy_torch_version=False):
         return torch.load(io.BytesIO(data), map_location="cpu", weights_only=True)
 
 
-def load_milestone(name, path):
+def load_milestone(name, path, *, inference_export=False):
     """Return a frozen inference model (SYN53) or normalized observer bundle."""
     if name not in CHECKPOINTS:
         raise ValueError("Unknown milestone")
-    saved = load_verified(path, CHECKPOINTS[name])
+    identities = INFERENCE_CHECKPOINTS if inference_export else CHECKPOINTS
+    saved = load_verified(path, identities[name])
+    if inference_export and saved.get("source_checkpoint_sha256") != CHECKPOINTS[name]:
+        raise ValueError("Export source identity mismatch")
     if name.startswith("syn53-"):
         model = TransformerLens(DedicatedBoundaryReaderConfig(**saved["model_config"]))
         model.load_state_dict(saved["model"], strict=True)

@@ -46,7 +46,7 @@ For platform-specific PyTorch installation options, see the [official installati
 ## Trained Lens milestones
 
 The [milestone catalog](docs/milestones/README.md) separates arithmetic-target
-readers from weights-only observers of image-recognition targets. It documents
+readers (including the later activation-assisted trajectory reader) from weights-only observers of image-recognition targets. It documents
 selected trained checkpoints, exact input contracts, saved comparisons (including
 negative results), and hash-verified local inference commands. Checkpoint files
 are not yet hosted: the inference commands require matching local artifacts.

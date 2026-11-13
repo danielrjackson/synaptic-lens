@@ -15,6 +15,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--milestone', choices=sorted(CHECKPOINTS), required=True)
     parser.add_argument('--checkpoint', type=Path, required=True)
+    parser.add_argument('--inference-export', action='store_true', help='Use separately hash-pinned inference-only export, not original checkpoint')
     parser.add_argument('--target', type=Path)
     parser.add_argument('--target-sha256')
     parser.add_argument('--coordinate-schema', type=Path)
@@ -24,7 +25,7 @@ def main():
     if args.milestone.startswith('syn53-') and any((args.target,args.target_sha256,args.coordinate_schema)):
         parser.error('SYN53 example uses a synthetic adder; target-file import is not implemented')
     torch.set_num_threads(1)
-    model = load_milestone(args.milestone, args.checkpoint)
+    model = load_milestone(args.milestone, args.checkpoint, inference_export=args.inference_export)
     if args.milestone.startswith('mnist-'):
         result = {'predicted_mean_cross_entropy': predict_mnist(args.milestone,model,args.target,args.target_sha256,args.coordinate_schema),
                   'scope': 'scalar target risk, not digit prediction or a reproduced study metric'}

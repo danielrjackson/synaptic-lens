@@ -37,8 +37,11 @@ def test_scoped_legacy_version(tmp_path):
     assert torch.serialization.get_safe_globals()==before
 
 
+class UnreviewedCheckpointMetadata:
+    pass
+
 def test_unknown_global_remains_rejected(tmp_path):
-    p=tmp_path/'bad.pt';torch.save({'x':Exception('not allowed')},p)
+    p=tmp_path/'bad.pt';torch.save({'x':UnreviewedCheckpointMetadata()},p)
     with pytest.raises(pickle.UnpicklingError):
         c.load_verified(p,hashlib.sha256(p.read_bytes()).hexdigest(),legacy_torch_version=True)
 
@@ -103,3 +106,8 @@ def test_syn53_model_fixture_load_and_predict(tmp_path,monkeypatch):
     with torch.inference_mode():
         response=restored.predict(restored.encode((affine_relu_records(target),)),LensQuery(torch.zeros(1,20)))
     assert response.status=='supported' and torch.isfinite(response.values).all()
+
+def test_inference_export_wrong_source_rejected(monkeypatch):
+    monkeypatch.setattr(c, 'load_verified', lambda *a, **kw: {'source_checkpoint_sha256': '0' * 64})
+    with pytest.raises(ValueError, match='source identity'):
+        c.load_milestone('syn53-control', 'unused', inference_export=True)

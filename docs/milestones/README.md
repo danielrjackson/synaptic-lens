@@ -8,6 +8,7 @@ receiving any images.
 | Track | Selected milestone | Lens input | Prediction |
 | --- | --- | --- | --- |
 | [Arithmetic targets](adder-boundary-attention.md) | Matched boundary-attention comparison (SYN53) | Target network records and explicit query metadata | Query-level behavioral estimates |
+| [Arithmetic trajectories](adder-trajectory.md) | Lifetime trajectory reader (SYN88) | Canonical target weights, queries and query-aligned hidden activations | Correctness logits across training ages |
 | [Image-recognition targets](mnist-direct-weights.md) | Direct-weight MNIST comparison | Target parameters, or statistics of those parameters | Mean cross-entropy of a fixed target evaluation suite |
 
 These are different problems and architectures, not interchangeable versions
@@ -48,3 +49,7 @@ images or external target-generation code are granted by these milestone pages.
 For earlier arithmetic studies and the allocation comparison, see
 [Selected research results](../RESULTS.md). The milestone catalog is selective,
 not a claim that every research experiment is a supported release.
+
+## Inference-only packaging
+
+The checkpoint example also accepts `--inference-export`. This explicitly selects a separate hash-pinned export identity rather than treating modified bytes as the historical checkpoint. The exported models preserve the model tensors and required configuration/normalization, record the original checkpoint hash, and omit optimizer, RNG, sampler or unnecessary training-history fields. They cannot resume training. These locally validated exports are not yet publicly downloadable; this option does not establish a model-hosting URL or grant redistribution rights.

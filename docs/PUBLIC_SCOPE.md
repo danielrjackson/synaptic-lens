@@ -24,8 +24,8 @@ demonstration, not evidence of improved training performance.
 
 Study orchestration, private working notes, agent coordination, operational
 supervision and storage management are outside this small distribution. So are
-historical study checkpoint adapters, pretrained weights, dataset caches and
-training outputs. The public core tests do not certify omitted study runners.
+unselected study checkpoint adapters, pretrained weights, dataset caches and
+training outputs. Selected hash-bound inference adapters are included for SYN53, SYN88 and the direct-weight MNIST comparison; see the [milestone catalog](milestones/README.md). These adapters do not include the weights or reproduce complete study evaluations. The public core tests do not certify omitted study runners.
 No claims of trained-model accuracy, fresh-model generalization or causal
 interpretation follow from these software checks. Historical numerical evidence
 and its specific limitations are separately curated in [Selected results](RESULTS.md).
@@ -43,3 +43,5 @@ The original environment had a CUDA-enabled wheel, but these checks did not use 
 Other platforms and older PyTorch versions have not been independently checked
 for this curated distribution. The dependency floor conservatively reflects the
 validated version, not a claim that older versions cannot work.
+
+The milestone integration passed 95 core tests on Python 3.13/PyTorch 2.14 CPU. Independently reviewed focused tests passed as well. Local real-artifact smoke checks exercised all four stripped SYN53/MNIST exports and the SYN88 four-root fixture. These checks validate loader and inference paths, not a new full study evaluation.
