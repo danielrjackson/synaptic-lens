@@ -5,3 +5,8 @@ __pycache__/
 build/
 *.egg-info/
 dist/
+
+.venv-locked/
+.venv-installer/
+
+.venv-combined/

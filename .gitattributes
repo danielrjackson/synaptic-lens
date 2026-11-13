@@ -1,0 +1,29 @@
+# Windows working copies use CRLF for maintained text. Git blobs stay normalized.
+* text=auto eol=crlf
+
+# POSIX shell execution requires LF.
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Preserve canonical published/license and frozen evidence/source bytes.
+/LICENSE.md text eol=lf
+/LICENSE-MODEL.md text eol=lf
+/src/synaptic_lens/observer.py text eol=lf
+/src/synaptic_lens/trajectory.py text eol=lf
+/docs/results/** text eol=lf
+/docs/releases.json text eol=lf
+
+# Never line-normalize model, array, archive or image bytes.
+*.pt -text
+*.npz -text
+*.npy -text
+*.safetensors -text
+*.whl -text
+*.gz -text
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.gif -text
+
+# Generated hashed locks use LF for deterministic regeneration.
+/requirements/** text eol=lf

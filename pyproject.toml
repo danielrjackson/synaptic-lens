@@ -11,9 +11,10 @@ dependencies = ["torch>=2.14", "numpy>=2"]
 
 [project.optional-dependencies]
 test = ["pytest>=8"]
+targets = ["synaptic-lens-target-model-factory @ git+https://github.com/danielrjackson/synaptic-lens-target-model-factory.git@aec5e0b9558bbecc654504d91aedabf124901bc6"]
 
 [build-system]
-requires = ["setuptools>=77"]
+requires = ["setuptools==84.2.1"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
