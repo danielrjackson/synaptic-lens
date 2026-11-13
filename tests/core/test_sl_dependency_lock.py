@@ -72,3 +72,55 @@ def test_locked_run_uses_installed_package():
     if name:
         package = __import__(name)
         assert Path(package.__file__).is_relative_to(Path(sys.prefix))
+
+
+@pytest.mark.parametrize("change", ["repository", "revision", "dirty", "lock"])
+def test_companion_rejects_wrong_identity_before_build(tmp_path, monkeypatch, change):
+    module = checker(tmp_path)
+    pin = json.loads((module.REQ / "companion.json").read_text())
+    companion = tmp_path / "factory"
+    (companion / "requirements").mkdir(parents=True)
+    (companion / "requirements/integrity.json").write_bytes(b"wrong identity")
+    values = {("remote", "get-url", "origin"): pin["repository"],
+              ("rev-parse", "HEAD"): pin["commit"],
+              ("rev-parse", "HEAD^{tree}"): pin["tree"],
+              ("status", "--porcelain"): ""}
+    if change == "repository":
+        values[("remote", "get-url", "origin")] = "https://example.invalid/other.git"
+    elif change == "revision":
+        values[("rev-parse", "HEAD")] = "0" * 40
+    elif change == "dirty":
+        values[("status", "--porcelain")] = " M changed.py"
+    monkeypatch.setattr(module.subprocess, "check_output", lambda command, **kwargs: values[tuple(command[3:])])
+    monkeypatch.setattr(module, "run", lambda *args, **kwargs: pytest.fail("Unverified companion executed"))
+    with pytest.raises(ValueError):
+        module.verify_companion(companion)
+
+
+def test_pinned_build_excludes_ignored_source_and_stale_build(tmp_path, monkeypatch):
+    module = checker(tmp_path)
+    repo = tmp_path / "factory-source"
+    repo.mkdir()
+    def git(*args):
+        return module.subprocess.check_output(["git", "-C", str(repo), *args], text=True).strip()
+    git("init", "--quiet")
+    (repo / ".gitignore").write_text("build/\nsrc/ignored.py\n")
+    (repo / "src").mkdir()
+    (repo / "src/tracked.py").write_text("value = 1\n")
+    git("add", ".gitignore", "src/tracked.py")
+    git("-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid", "commit", "--quiet", "-m", "Tracked source fixture")
+    (repo / "build/lib").mkdir(parents=True)
+    (repo / "build/lib/stale.py").write_text("stale = True\n")
+    (repo / "src/ignored.py").write_text("poison = True\n")
+    assert git("status", "--porcelain") == ""
+    (module.REQ / "companion.json").write_text(json.dumps({"commit": git("rev-parse", "HEAD")}))
+    seen = []
+    def build(python, snapshot):
+        assert (snapshot / "src/tracked.py").read_text() == "value = 1\n"
+        assert not (snapshot / "src/ignored.py").exists()
+        assert not (snapshot / "build").exists()
+        seen.append(snapshot)
+    monkeypatch.setattr(module, "install_wheel", build)
+    module.install_pinned_wheel("unused-python", repo)
+    assert len(seen) == 1 and not seen[0].exists()
+    assert (repo / "build/lib/stale.py").exists()

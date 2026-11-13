@@ -106,8 +106,14 @@ The `Locked Windows CPU validation` GitHub workflow is manual-only, one Windows
 job, with actions pinned by commit. It runs this same installation and test path.
 No hosted run is required or launched for routine edits. Core Lens installation
 does not require the companion factory. Tests requiring that optional companion
-run in the separately reviewed combined checkout, after the factory is available;
+run in the separately reviewed combined checkout;
 a core-only CI pass must not be reported as combined validation.
+
+### Optional pinned factory
+
+See [factory integration](FACTORY_INTEGRATION.md) for the reviewed public source
+pin and combined installation gate. The CPU gate needs an approved factory
+revision whose dependency lock includes every core pin.
 
 ### Reviewed CPU updates
 
