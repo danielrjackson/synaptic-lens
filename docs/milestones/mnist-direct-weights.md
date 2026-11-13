@@ -33,6 +33,10 @@ is `82ed9223874fa81ed743bf83470caa075eba4183b5be4f580bd19303b87983d1`.
 The public observer source matches that implementation after normalizing
 checkout line endings.
 
+The following sizes and hashes identify the **historical original bundles**,
+not the stripped downloadable inference exports. Export hashes are recorded in
+the Hugging Face release manifest; filenames are retained but bytes differ.
+
 | Checkpoint | Parameters | Selected epoch | Bytes |
 | --- | ---: | ---: | ---: |
 | `lens-full_raw_weights.pt` | 1,260,289 | 1 | 5,209,509 |
@@ -43,7 +47,7 @@ SHA-256 identifiers:
 - Raw weights: `6011ca7cf3df54282eecef05aebc057e17fcc4a846ba61683e988c07b02a1111`
 - Tensor statistics: `797a2834e33ed27835cb65054d1e4d6b44cf48c09ea3b125f96cf4d9b6c843c4`
 
-**These checkpoints are not included or publicly hosted by this repository.**
+**The two inference-only Lens exports and 300 target checkpoints are now [published on Hugging Face](../ARTIFACTS.md).** The original training-resume checkpoints are not distributed.
 Both hashes match the saved result inventory. Both bundles passed restricted
 `weights_only=True` loading, strict state-dictionary loading into the public
 model class and CPU inference on a hash-verified real target checkpoint.
@@ -77,12 +81,13 @@ trained checkpoint is not, by itself, evidence of useful weight-space
 understanding. It does not establish unseen-root generalization or a fresh
 confirmatory result.
 
-## What a complete runnable release needs
+## Local inference and reproduction limits
 
-For locally available matching files, the inference interface is:
+After downloading the matching inference-only Lens export, target checkpoint
+and coordinate schema, use:
 
 ```sh
-python examples/predict_checkpoint.py --milestone mnist-raw --checkpoint /path/to/lens-full_raw_weights.pt --target /path/to/target.pt --target-sha256 TARGET_SHA256 --coordinate-schema /path/to/coordinates.json
+python examples/predict_checkpoint.py --milestone mnist-raw --inference-export --checkpoint /path/to/lens-full_raw_weights.pt --target /path/to/target.pt --target-sha256 TARGET_SHA256 --coordinate-schema /path/to/coordinates.json
 ```
 
 Replace each path and hash placeholder with the verified artifact value. For
@@ -103,7 +108,7 @@ root/epoch splits, evaluation-query identifiers, label-generation procedure
 and matching evaluator. The original runner had platform-specific operational
 dependencies; it is not presented here as a portable reproduction command.
 
-A future model card should distinguish the weights-only observer's license
+The linked model cards distinguish the weights-only observer's license
 from target-model, generator and dataset terms. No image data or external
 generator code is relicensed by this page. This milestone deliberately excludes
 the separate image-fed Lens experiments.

@@ -33,7 +33,9 @@ architecture, feature schema and prediction target.
 ## Selected checkpoint identities
 
 The historical endpoint filename is `pass-09-complete.pt` for each arm.
-The checkpoints are **not included or publicly hosted by this repository**.
+Two inference-only development-endpoint exports are now [published on Hugging Face](../ARTIFACTS.md).
+The table below identifies **historical original bundles**, not downloadable
+exports: export bytes and hashes differ and are recorded in the release manifest.
 
 | Arm | Bytes | SHA-256 |
 | --- | ---: | --- |
@@ -67,11 +69,11 @@ and [machine-readable results](../results/boundary-attention.json).
 
 ## Reproduction boundary
 
-If you have the matching checkpoint locally, run from the repository root:
+Download the matching inference-only exports, then run from the repository root:
 
 ```sh
-python examples/predict_checkpoint.py --milestone syn53-regional --checkpoint /path/to/regional/pass-09-complete.pt
-python examples/predict_checkpoint.py --milestone syn53-control --checkpoint /path/to/control/pass-09-complete.pt
+python examples/predict_checkpoint.py --milestone syn53-regional --inference-export --checkpoint /path/to/syn53/regional-input-output.pt
+python examples/predict_checkpoint.py --milestone syn53-control --inference-export --checkpoint /path/to/syn53/capacity-control.pt
 ```
 
 The default input is a deterministic, randomly initialized synthetic adder.

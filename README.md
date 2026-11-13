@@ -48,13 +48,13 @@ For platform-specific PyTorch installation options, see the [official installati
 The [milestone catalog](docs/milestones/README.md) separates arithmetic-target
 readers (including the later activation-assisted trajectory reader) from weights-only observers of image-recognition targets. It documents
 selected trained checkpoints, exact input contracts, saved comparisons (including
-negative results), and hash-verified local inference commands. Checkpoint files
-are not yet hosted: the inference commands require matching local artifacts.
+negative results), and hash-verified local inference commands. Selected checkpoints and target populations are now available on Hugging Face;
+see [published artifacts](docs/ARTIFACTS.md) for exact releases and limitations.
 Image-fed Lens experiments are excluded.
 
 ## Models and reproducibility
 
-Pretrained checkpoints and large research artifacts are not included. No public artifact download is currently established by this repository. The example and core unit tests generate their own small inputs and do not depend on those artifacts. Reproducing trained-model research findings requires the relevant checkpoint, dataset and protocol; the runnable example must not be mistaken for that reproduction.
+Model files are hosted separately in four [public Hugging Face repositories](docs/ARTIFACTS.md), not in this Git repository. The example and core unit tests generate their own small inputs and do not depend on those artifacts. Reproducing trained-model research findings requires the relevant checkpoint, dataset and protocol; the runnable example must not be mistaken for that reproduction.
 
 ## Project and history
 

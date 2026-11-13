@@ -10,7 +10,7 @@ Target coefficients are flattened in this order: hidden weight (640), hidden bia
 
 ## Selected inference exports
 
-These are numeric-only NPZ exports, not training-resume checkpoints. They omit optimizer and random-generator state and load with `allow_pickle=False`. No artifact files or public download links are distributed by this repository yet.
+These are numeric-only NPZ exports, not training-resume checkpoints. They omit optimizer and random-generator state and load with `allow_pickle=False`. The three checkpoints and complete historical target population are publicly hosted on Hugging Face; see [published artifacts](../ARTIFACTS.md).
 
 | Training seed | Selected update | Export bytes | Export SHA-256 |
 | --- | ---: | ---: | --- |
