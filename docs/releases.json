@@ -1,0 +1,107 @@
+{
+  "synaptic-lens-adder": {
+    "repository": "danielrjackson/synaptic-lens-adder",
+    "revision": "78680e8ccac56ebbfe58eb8d0a1d6e4924f0bc78",
+    "manifest_file": "export-manifest.json",
+    "manifest_sha256": "5cffd8bf42c4a8de194f3c33263b8cf658a8f92a44530241a03925da785d7b4c",
+    "manifest_url": "https://huggingface.co/danielrjackson/synaptic-lens-adder/resolve/78680e8ccac56ebbfe58eb8d0a1d6e4924f0bc78/export-manifest.json",
+    "selected_files": [
+      {
+        "file": "syn88/config.json",
+        "bytes": 848,
+        "sha256": "0c9e7c7fc6044bab9107b6f2979d11f7bf844742ac927287e1df54fc999e0626"
+      },
+      {
+        "file": "syn88/loader.py",
+        "bytes": 2840,
+        "sha256": "88267df65611895d115ee6e5205f765513cadd3ffed520537967ff4879d36c72"
+      },
+      {
+        "file": "syn88/model.py",
+        "bytes": 6798,
+        "sha256": "56bd666ecab554cad5c3b1ce03642f7f77fdaba6aa3572eb49f03be43c296b79"
+      },
+      {
+        "file": "syn88/verification.json",
+        "bytes": 4926,
+        "sha256": "0989e83b87ec34e865745f522a9ca83476ce12735c3668f037d00e6571e28f33"
+      },
+      {
+        "file": "syn88/lens-trajectory-seed-7.npz",
+        "bytes": 26282,
+        "sha256": "73786c9e025070b6884240430222b74dea7c5ee1422ee8d7c409462c604aee26"
+      },
+      {
+        "file": "syn88/lens-trajectory-seed-17.npz",
+        "bytes": 26282,
+        "sha256": "4cee5c66bfb8189a2b4b58821c251035da8cc424dd73a0c67247cae935f6d3b3"
+      },
+      {
+        "file": "syn88/lens-trajectory-seed-27.npz",
+        "bytes": 26282,
+        "sha256": "20cf06bf7599c457b56e42c381c7876ba2119985a98bb0a36a8633e3cffd614f"
+      },
+      {
+        "file": "syn53/capacity-control.pt",
+        "bytes": 2949615,
+        "sha256": "178ae78847ceabc38574461bd63557a590ebac65daa7f5ae13eb94c4fa8f97ba"
+      },
+      {
+        "file": "syn53/regional-input-output.pt",
+        "bytes": 2949930,
+        "sha256": "906e8a26fb0a885bb5d6cb4bb360f15c48a3553201dbd07fbb3d73845e6fdf51"
+      }
+    ],
+    "full_export_count": 9
+  },
+  "synaptic-lens-targets-adder": {
+    "repository": "danielrjackson/synaptic-lens-targets-adder",
+    "revision": "bf84ab005319635d866dbaccf54ae29ea9e15197",
+    "manifest_file": "export-manifest.json",
+    "manifest_sha256": "cddcae24b8d4cf81bf63c0e156843ba37f8a3c42be32aee27eb44d0b8e10dffb",
+    "manifest_url": "https://huggingface.co/danielrjackson/synaptic-lens-targets-adder/resolve/bf84ab005319635d866dbaccf54ae29ea9e15197/export-manifest.json",
+    "selected_files": [
+      {
+        "file": "syn88/population/root-0000.npz",
+        "bytes": 76758,
+        "sha256": "e109c440a114bddc9a6d79d5229f9ed6592cfbd22f1da706f587e4ae184eabf2"
+      }
+    ],
+    "full_export_count": 2305
+  },
+  "synaptic-lens-mnist": {
+    "repository": "danielrjackson/synaptic-lens-mnist",
+    "revision": "1acd95aaffda8fc148aa362a0573f72d65dddea3",
+    "manifest_file": "export-manifest.json",
+    "manifest_sha256": "be9a0f8e25f10282958b498e48ae418a4ce005bb3eca19e81860fbec04bcec8b",
+    "manifest_url": "https://huggingface.co/danielrjackson/synaptic-lens-mnist/resolve/1acd95aaffda8fc148aa362a0573f72d65dddea3/export-manifest.json",
+    "selected_files": [
+      {
+        "file": "lens-full_raw_weights.pt",
+        "bytes": 5203173,
+        "sha256": "8a3ad72f3ba64261e5d49168701fdc5edf19a6808f8a78c8e1fe076a6e78a32f"
+      },
+      {
+        "file": "lens-tensor_statistics.pt",
+        "bytes": 64309,
+        "sha256": "c871b34578fd1347e778670ad41d6d2ade69bb7ebf0464fad8a75d5dcaf05ca1"
+      }
+    ],
+    "full_export_count": 2
+  },
+  "synaptic-lens-targets-mnist": {
+    "repository": "danielrjackson/synaptic-lens-targets-mnist",
+    "revision": "f422682c970bdf64c8b30d24c2cf7bac8ce3ef6c",
+    "manifest_file": "export-manifest.json",
+    "manifest_sha256": "492a8bae846aa09712915e0be5668be399b063a0b934bcea1dce084b5f2bbdad",
+    "manifest_url": "https://huggingface.co/danielrjackson/synaptic-lens-targets-mnist/resolve/f422682c970bdf64c8b30d24c2cf7bac8ce3ef6c/export-manifest.json",
+    "selected_files": [
+      {
+        "file": "coordinate-schema.json",
+        "bytes": 32462,
+        "sha256": "36e6ab0e0a61bf01246a6c303fc7d0a96ef8cc916fec4ce297412908a042a1c4"
+      }
+    ],
+    "full_export_count": 301
+  }
+}
