@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "profile": "windows-x64-cpython313-cpu",
+  "resolver": "uv 0.7.4",
+  "import_name": "synaptic_lens",
+  "tests": "tests/core",
+  "sha256": {
+    "pyproject.toml": "87db3a8ad0d106b0a8cba2190960c743f3b3bd322faa56e247397c719cc94820",
+    "requirements/windows-cpu.in": "8f81b28cef4e8f2102b299afd80e0effa9091f5378075229de4efef849b7de2f",
+    "requirements/windows-cpu.txt": "b2983e4bae27723806b8554e2651de6e13a3985ecddf21bf0665a0d15c345f10",
+    "requirements/installer.in": "88335dc4932e685227a58045b90891ca2ba86b90fd787414b48b39baaf1080e6",
+    "requirements/installer.txt": "2dbf4890c940ead82c680e7058b38ad95303d36e3ded85252698e3e2a9d14d5c"
+  }
+}

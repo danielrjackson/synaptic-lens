@@ -8,3 +8,6 @@ dist/
 .venv-hub/
 
 runs/
+
+.venv-locked/
+.venv-installer/

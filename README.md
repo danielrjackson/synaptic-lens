@@ -2,8 +2,8 @@
 
 Research software for asking what a neural network's weights reveal about its behavior. The project builds structured representations of a target network and trains separate readers to answer questions about that target.
 
-[Explore in your browser](https://danielrjackson.github.io/synaptic-lens/explore/) ·
-[Reconstruct a neuron](https://danielrjackson.github.io/synaptic-lens/examples/neuron-completion.html) ·
+[Explore in your browser](https://danielrjackson.github.io/synaptic-lens/explore/) Â·
+[Reconstruct a neuron](https://danielrjackson.github.io/synaptic-lens/examples/neuron-completion.html) Â·
 [Research and results](https://danielrjackson.github.io/synaptic-lens/research/)
 
 Start with the browser demos to inspect predictions without installing anything.
@@ -60,6 +60,8 @@ uv sync --locked --extra test --extra hub
 uv run --locked python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
 uv run --locked --extra test pytest
 ```
+
+A separate [hash-locked Windows CPU profile](docs/DEPENDENCIES.md#locked-windows-cpu-environment) validates installed wheels without requiring CUDA.
 
 ## Try the small CPU fixtures
 
