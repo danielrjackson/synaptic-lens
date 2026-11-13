@@ -27,3 +27,9 @@ The paired smoke fixture contains four previously evaluated TEST roots, both rul
 The library APIs are `load_model` and `predict` in `synaptic_lens.trajectory_checkpoint`. If moving the loaded model to CUDA, set `torch.set_float32_matmul_precision('highest')`; lower-precision TF32 changes this checkpoint's predictions. The predictor rejects CUDA inference with a different precision setting.
 
 This small inference interface is not a portable training runner or a reproduction of the complete study. Full evaluation additionally requires all target roots, split and query manifests, labels, and the matching evaluator. Model implementation, selected checkpoint, smoke compatibility, and empirical generalization are separate claims. Artifact distribution requires explicit terms and provenance in addition to this repository's software license.
+
+## Target generation recipe
+
+See [SYN88 generation and evaluation](syn88-generation.md) for the paired-rule
+training recipe, numeric target format and root-disjoint population protocol.
+This target generator is separate from training the Lens reader itself.
