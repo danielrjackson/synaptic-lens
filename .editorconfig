@@ -1,0 +1,32 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+
+[*.{sh,bash}]
+end_of_line = lf
+
+[LICENSE.md]
+end_of_line = lf
+
+[LICENSE-MODEL.md]
+end_of_line = lf
+
+[src/synaptic_lens/observer.py]
+end_of_line = lf
+
+[src/synaptic_lens/trajectory.py]
+end_of_line = lf
+
+[docs/results/**]
+end_of_line = lf
+
+[docs/releases.json]
+end_of_line = lf
+
+[*.{pt,npz,npy,safetensors,whl,gz,png,jpg,jpeg,gif}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
