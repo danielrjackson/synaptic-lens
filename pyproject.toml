@@ -11,6 +11,7 @@ dependencies = ["torch>=2.14", "numpy>=2"]
 
 [project.optional-dependencies]
 test = ["pytest>=8"]
+targets = ["synaptic-lens-target-model-factory==0.1.0"]
 
 [build-system]
 requires = ["setuptools>=77"]
