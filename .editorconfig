@@ -30,3 +30,6 @@ end_of_line = lf
 charset = unset
 end_of_line = unset
 insert_final_newline = unset
+
+[requirements/**]
+end_of_line = lf

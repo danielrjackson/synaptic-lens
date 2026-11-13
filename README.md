@@ -18,6 +18,11 @@ The work spans weights-only competence prediction, query-based attention readers
 
 These are research components, not a general-purpose interpreter for arbitrary models. Implementing a query interface or passing a unit test does not establish learned predictive accuracy, causal localization or generalization. Attention weights alone are not explanations.
 
+## Reproducible Windows installation
+
+Use the [hash-locked CPU installation](docs/DEPENDENCIES.md) for reproducible
+runtime, tests and wheel builds. The exploratory installation below is not locked.
+
 ## Try a small CPU example
 
 Use Python 3.13 or later in a virtual environment. Install a CPU-compatible PyTorch build for your platform and pytest. For a default installation:

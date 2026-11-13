@@ -24,3 +24,6 @@
 *.jpg -text
 *.jpeg -text
 *.gif -text
+
+# Generated hashed locks use LF for deterministic regeneration.
+/requirements/** text eol=lf

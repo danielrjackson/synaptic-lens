@@ -14,7 +14,7 @@ test = ["pytest>=8"]
 targets = ["synaptic-lens-target-model-factory==0.1.0"]
 
 [build-system]
-requires = ["setuptools>=77"]
+requires = ["setuptools==84.2.1"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
