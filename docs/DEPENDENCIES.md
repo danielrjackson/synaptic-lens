@@ -42,6 +42,15 @@ does not require the companion factory. Tests requiring that optional companion
 run in the separately reviewed combined checkout, after the factory is available;
 a core-only CI pass must not be reported as combined validation.
 
+## Optional pinned factory
+
+For a fully locked combined install, use the [exact companion source gate](FACTORY_INTEGRATION.md).
+Its profile adds Pillow to the same core dependency versions. The factory source
+is pinned by Git commit/tree and its reviewed integrity manifest. It remains
+private pending a separate release decision, so ordinary public core installation
+continues to work independently. Never replace the pinned Git source with an
+unverified local generator copy.
+
 ## Reviewed updates
 
 Do not regenerate against unconstrained newest dependencies. Edit the intentional

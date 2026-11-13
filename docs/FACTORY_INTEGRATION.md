@@ -1,23 +1,49 @@
 # Canonical target-factory integration
 
-The companion `synaptic-lens-target-model-factory` package owns the SYN88
-generator, root split implementation, label maps and target lineage manifests.
-SL keeps the existing `synaptic_lens.syn88_targets` module and CLI as thin lazy
-forwarders. Ages/rule names remain immutable protocol metadata, not a second
-implementation. Core Lens imports and workflows do not require the factory.
+The companion `synaptic-lens-target-model-factory` package owns SYN88 generation,
+root splits, label maps and target lineage. SL's existing
+`synaptic_lens.syn88_targets` module and CLI are lazy compatibility forwarders.
+Core Lens imports and workflows do not require the factory.
 
-The optional `targets` extra requires factory version 0.1.0. Install the reviewed
-factory source or wheel first, then install SL with `.[test,targets]`. This does
-not assume a PyPI publication. The existing public generator commands keep their
-arguments and numeric format. Missing companion installation gives an explicit
-error; incompatible age/rule metadata is rejected before generation.
+The optional `targets` extra is bound to the reviewed factory Git revision
+`aec5e0b9558bbecc654504d91aedabf124901bc6`, tree
+`1d4798eb1b2843d5945ee00aab0feb097f8de3ef`, rather than an assumed PyPI release.
+[Factory draft PR #1](https://github.com/danielrjackson/synaptic-lens-target-model-factory/pull/1)
+contains that source; its main currently holds only the reviewed metadata baseline.
+The factory remains private: an authorized clone can run the combined gate, while
+public users can use SL core without it. Public companion availability and both
+follow-up merges remain separate release decisions. No private repository access
+is required for SL core. Do not describe optional generation as anonymously
+installable until the factory visibility/release gate is resolved.
 
-This transition branch must not be integrated until the factory repository has
-an approved public bootstrap and an independently reviewed installable source
-revision. Pin that approved revision in installation instructions. The current
-reviewed factory content is available as a local wheel for combined-package
-validation; no private repository access is a supported public runtime dependency.
+## Hash-locked combined installation
 
-Default core tests may omit optional generator tests when the companion is absent;
-the combined release gate installs both packages and runs every generator test.
-Forwarding, missing-dependency and protocol-drift contracts remain core tests.
+First follow the isolated installer bootstrap in [dependency setup](DEPENDENCIES.md).
+Obtain the factory using your existing authorized Git access, without adding
+credentials to commands, manifests or Git URLs:
+
+```powershell
+git clone https://github.com/danielrjackson/synaptic-lens-target-model-factory.git ../synaptic-lens-target-model-factory
+git -C ../synaptic-lens-target-model-factory checkout --detach aec5e0b9558bbecc654504d91aedabf124901bc6
+.\.venv-installer\Scripts\python.exe scripts/locked.py install --environment .venv-combined --factory-checkout ../synaptic-lens-target-model-factory
+.\.venv-installer\Scripts\python.exe scripts/locked.py test --environment .venv-combined --factory-checkout ../synaptic-lens-target-model-factory
+```
+
+Use a fresh clone/path; preserve any existing worktree. `requirements/companion.json`
+binds repository URL, source commit/tree and the factory lock-integrity manifest.
+The installer rejects a different source revision, dirty checkout or lock identity
+before creating an environment. It verifies both lock profiles, installs the
+factory's hash-required transitive Windows CPU profile (a superset of core), and
+builds the companion from a fresh tracked Git archive of the verified commit,
+excluding ignored source/build residue. It builds both local wheels with the
+locked backend without dependency resolution.
+The combined test command exercises both installed packages with source-path
+injection disabled and runs every optional generator test. No large training,
+model download or raw MNIST access is required.
+
+The conventional optional-extra installer may fetch this exact Git source, but
+it is not the frozen dependency/build path above. Core-only manual CI intentionally
+omits the private companion; a core-only pass is not combined release validation.
+Missing factory installation gives an explicit error; incompatible age/rule
+metadata is rejected before generation. Existing generator arguments and numeric
+formats are preserved.

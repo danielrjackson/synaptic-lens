@@ -1,11 +1,13 @@
 """Hash-enforced Windows CPU install and validation, without changing shared environments."""
 import argparse
 import hashlib
+import io
 import json
 import os
 import re
 import subprocess
 import sys
+import tarfile
 import tempfile
 from pathlib import Path
 
@@ -43,12 +45,57 @@ def run(*command, cwd=ROOT):
     subprocess.run([str(x) for x in command], cwd=cwd, env=env, check=True)
 
 
+def verify_companion(path):
+    """Bind an authorized local clone to the remotely available reviewed source."""
+    path = path.resolve()
+    pin = json.loads((REQ / "companion.json").read_text())
+    def git(*args):
+        return subprocess.check_output(["git", "-C", str(path), *args], text=True).strip()
+    if git("remote", "get-url", "origin") != pin["repository"]:
+        raise ValueError("Companion repository identity differs from pin")
+    if git("rev-parse", "HEAD") != pin["commit"] or git("rev-parse", "HEAD^{tree}") != pin["tree"]:
+        raise ValueError("Companion source revision differs from pin")
+    if git("status", "--porcelain"):
+        raise ValueError("Companion checkout must be clean before building")
+    if hashlib.sha256((path / "requirements/integrity.json").read_bytes()).hexdigest() != pin["integrity_sha256"]:
+        raise ValueError("Companion lock integrity differs from pin")
+    own_pins = {line for line in (REQ / "windows-cpu.in").read_text().splitlines() if line and not line.startswith("#")}
+    companion_pins = set((path / "requirements/windows-cpu.in").read_text().splitlines())
+    if not own_pins <= companion_pins:
+        raise ValueError("Companion profile does not contain the core locked versions")
+    run(sys.executable, path / "scripts/locked.py", "check")
+    return path
+
+
+def install_wheel(python, source):
+    # Build local Git source with the locked backend, without isolation downloads.
+    with tempfile.TemporaryDirectory(prefix="sl-locked-wheel-") as temp:
+        run(python, "-I", "-c", "from setuptools.build_meta import build_wheel; import sys; build_wheel(sys.argv[1])", temp, cwd=source)
+        wheels = list(Path(temp).glob("*.whl"))
+        if len(wheels) != 1:
+            raise RuntimeError("Expected exactly one local project wheel")
+        run(UV, "pip", "install", "--python", python, "--no-deps", wheels[0])
+
+
+def install_pinned_wheel(python, source):
+    """Build only tracked bytes from the verified pin, excluding ignored residue."""
+    pin = json.loads((REQ / "companion.json").read_text())
+    archive = subprocess.check_output(["git", "-C", str(source), "archive", "--format=tar", pin["commit"]])
+    with tempfile.TemporaryDirectory(prefix="sl-pinned-source-") as temp:
+        snapshot = Path(temp)
+        with tarfile.open(fileobj=io.BytesIO(archive), mode="r:") as stream:
+            stream.extractall(snapshot, filter="data")
+        install_wheel(python, snapshot)
+
+
 def main():
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument("action", choices=["check", "install", "test"])
+    parser.add_argument("--factory-checkout", type=Path)
     parser.add_argument("--environment", type=Path, default=ROOT / ".venv-locked")
     args = parser.parse_args()
     check()
+    companion = verify_companion(args.factory_checkout) if args.factory_checkout else None
     if args.action == "check":
         return
     if sys.platform != "win32" or sys.version_info[:2] != (3, 13):
@@ -64,20 +111,20 @@ def main():
         if uv_version != "0.7.4":
             raise RuntimeError("Install the hash-locked uv 0.7.4 bootstrap first")
         run(UV, "venv", "--python", sys.executable, env)
-        run(UV, "pip", "sync", "--python", python, "--require-hashes", "--only-binary", ":all:", REQ / "windows-cpu.txt")
-        # The locked backend builds local Git source; no unpinned PEP 517 isolation download.
-        with tempfile.TemporaryDirectory(prefix="sl-locked-wheel-") as temp:
-            run(python, "-I", "-c", "from setuptools.build_meta import build_wheel; import sys; build_wheel(sys.argv[1])", temp)
-            wheels = list(Path(temp).glob("*.whl"))
-            if len(wheels) != 1:
-                raise RuntimeError("Expected exactly one local project wheel")
-            run(UV, "pip", "install", "--python", python, "--no-deps", wheels[0])
+        dependencies = companion / "requirements/windows-cpu.txt" if companion else REQ / "windows-cpu.txt"
+        run(UV, "pip", "sync", "--python", python, "--require-hashes", "--only-binary", ":all:", dependencies)
+        if companion:
+            install_pinned_wheel(python, companion)
+        install_wheel(python, ROOT)
         run(UV, "pip", "check", "--python", python)
     else:
         profile = json.loads((REQ / "integrity.json").read_text())
         package = profile["import_name"]
         run(python, "-I", "-c", "import importlib.metadata as m,sys; pins=[line.strip().split('==') for line in open(sys.argv[1]) if line.strip() and not line.startswith('#')]; assert all(m.version(name)==version for name,version in pins); print('Installed dependency versions match lock')", REQ / "windows-cpu.in")
         run(python, "-I", "-c", "import importlib, pathlib, sys; m=importlib.import_module(sys.argv[1]); assert pathlib.Path(m.__file__).is_relative_to(pathlib.Path(sys.prefix)); print(m.__file__)", package)
+        if companion:
+            run(python, "-I", "-c", "import synaptic_lens_target_model_factory as f,pathlib,sys; assert pathlib.Path(f.__file__).is_relative_to(pathlib.Path(sys.prefix)); print(f.__file__)")
+            run(sys.executable, companion / "scripts/locked.py", "test", "--environment", env)
         os.environ["SL_LOCKED_PACKAGE"] = package
         run(python, "-I", "-m", "pytest", "-q", "-o", "pythonpath=", profile["tests"])
 
