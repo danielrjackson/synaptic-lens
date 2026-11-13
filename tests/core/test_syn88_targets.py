@@ -1,3 +1,8 @@
+# Target generation is an explicitly optional companion-package capability.
+import pytest
+
+pytest.importorskip("synaptic_lens_target_model_factory")
+
 import numpy as np
 import pytest
 import torch
