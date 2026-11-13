@@ -16,7 +16,7 @@ checkpoint or make untrusted pickle files safe to load.
 Tests cover numeric records, token/query contracts, boundary attention,
 masking, configuration serialization, policy detachment, allocation gradients,
 optimizer-state updates, ranking ties and output bytes. The optimizer fixture is
-an ordinary small neural network, not a study-specific controller. The three CPU
+an ordinary small neural network, not a study-specific controller. The small CPU
 examples need no stored model or dataset. Allocation weights are a mechanism
 demonstration, not evidence of improved training performance.
 

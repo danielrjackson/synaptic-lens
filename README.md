@@ -52,13 +52,17 @@ negative results), and hash-verified local inference commands. Selected checkpoi
 see [published artifacts](docs/ARTIFACTS.md) for exact releases and limitations.
 Image-fed Lens experiments are excluded.
 
+See [training and development workflows](docs/TRAINING.md) for the bounded
+trajectory optimizer, root-isolated MNIST mean-risk fitting API and exact release
+manifest references. These mechanisms do not claim historical result reproduction.
+
 ## Models and reproducibility
 
 Model files are hosted separately in four [public Hugging Face repositories](docs/ARTIFACTS.md), not in this Git repository. The example and core unit tests generate their own small inputs and do not depend on those artifacts. Reproducing trained-model research findings requires the relevant checkpoint, dataset and protocol; the runnable example must not be mistaken for that reproduction.
 
 ## Project and history
 
-Daniel Jackson develops Synaptic Lens as an independent research project. This repository contains a deliberately selected development history and a curated distribution, not a complete record of every experiment or development step. Selected historical commits retain original source authorship and author dates; curation is recorded separately.
+Daniel Jackson develops Synaptic Lens as an independent research project. AI tools assist engineering and curation; that assistance does not independently validate research claims. This repository contains a deliberately selected development history and a curated distribution, not a complete record of every experiment or development step. Selected historical commits retain original source authorship and author dates; curation is recorded separately.
 
 [Selected references](docs/REFERENCES.md) explain which sources informed the reader design and which algorithms/software the project uses. They distinguish design motivation from reproduction or validated capability. A [BibTeX bibliography](docs/references.bib) is included.
 
