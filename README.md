@@ -16,6 +16,13 @@ The work spans weights-only competence prediction, query-based attention readers
 - Detached allocation policies, antithetic optimizer updates, ranking/AUC and table export.
 - Small deterministic tests for numeric coverage, masking, permutations, queries and reconstruction contracts.
 
+## Try a pretrained Adder Lens
+
+The [pretrained Adder walkthrough](docs/ADDER_EXAMPLE.md) downloads the featured
+SYN88 reader and one target root, verifies their hashes, and reports predictions
+across its training ages. [Model downloads](docs/DOWNLOADS.md) cover all four
+published Lens and target releases, with pinned revisions and cache reuse.
+
 ## Try a small CPU example
 
 Use Python 3.13 or later in a virtual environment. Install a CPU-compatible PyTorch build for your platform and pytest. For a default installation:
