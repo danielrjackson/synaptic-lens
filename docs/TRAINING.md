@@ -117,7 +117,7 @@ read from the public release; no images were used. This is one loader/inference
 check. The historical raw-weight Lens error exceeded the constant baseline;
 the milestone page preserves the complete comparison.
 
-## Artifact identities and remaining gates
+## Artifact identities and required source data
 
 [releases.json](releases.json) pins the four public repositories, manifest hashes
 and selected file hashes. This compact index points to the pinned manifests containing all target

@@ -26,8 +26,10 @@ The repository provides model implementations and runnable software examples.
 The milestone pages identify selected historical checkpoints and their audited
 compatibility. [Published artifacts](../ARTIFACTS.md) links the released SYN88
 and MNIST checkpoints and target populations, and two SYN53 development-endpoint
-exports. The sealed SYN53 holdout is not included. Inference commands use downloaded
-local files and manifest hashes; they do not automatically download models.
+exports. The sealed SYN53 holdout is not included. The [image walkthrough](../IMAGE_EXAMPLE.md) and
+[Adder training walkthrough](../TRAINING.md) download their required models
+automatically. Lower-level inference commands accept verified local paths
+and manifest hashes.
 
 The milestone pages report saved historical metrics. To reproduce an evaluation, use its matched target population, query/split manifests, labels and evaluator. Software checks cover checkpoint loading and inference compatibility.
 
