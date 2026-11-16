@@ -4,19 +4,17 @@ Research software for asking what a neural network's weights reveal about its be
 
 ## Research highlights
 
-The work spans weights-only competence prediction, query-based attention readers, and controlled allocation of training effort. [Selected research results](docs/RESULTS.md) present the evidence and contrary findings: a structured observer outperformed strong shortcut baselines in a narrow output-rewiring study; regional attention improved probability estimates without establishing reliable query localization; learned allocation showed mixed gains at substantial probe cost. These are historical controlled studies, not broad interpretability claims.
+The work spans weights-only competence prediction, query-based attention readers, network activations, and controlled allocation of training effort. [Selected research results](docs/RESULTS.md) present the evidence and contrary findings: a structured observer outperformed strong shortcut baselines in a narrow output-rewiring study; regional attention improved probability estimates without establishing reliable query localization; learned allocation showed mixed gains at substantial probe cost.
 
 ## What is here
 
 - Raw-weight and neuron-invariant learned observers, train-only normalization, validation selection, statistics-ridge baselines and whole-run uncertainty estimates.
 - Deterministic training-prefix continuation with model, optimizer and sampler snapshots.
-- Exact records of supported affine/ReLU networks, with explicit parameter coverage and unsupported-input checks.
+- Records of supported affine/ReLU networks, with explicit parameter coverage and unsupported-input checks.
 - Paired attention readers over network records, separating target encoding from queried outputs.
 - A value-blind masked-scalar reader and local graph-context control.
 - Detached allocation policies, antithetic optimizer updates, ranking/AUC and table export.
 - Small deterministic tests for numeric coverage, masking, permutations, queries and reconstruction contracts.
-
-These are research components, not a general-purpose interpreter for arbitrary models. Implementing a query interface or passing a unit test does not establish learned predictive accuracy, causal localization or generalization. Attention weights alone are not explanations.
 
 ## Try a small CPU example
 
@@ -29,7 +27,7 @@ python examples/inspect_target.py
 python examples/synthetic_allocation.py
 ```
 
-The learned-observer example generates small addition networks, keeps whole target runs in separate train/validation/test partitions, and fits raw/structured observers against statistics-ridge and train-mean controls. It uses a fixed small CPU budget and automatically removes temporary targets. It reports whatever wins, including baselines: it is an executable workflow, not reproduction of the historical study scores.
+The learned-observer example generates small addition networks, keeps whole target runs in separate train/validation/test partitions, and fits raw/structured observers against statistics-ridge and train-mean controls. It uses a fixed small CPU budget and automatically removes temporary targets.
 
 The record-inspection example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs. It does not train a reader or demonstrate learned prediction. No GPU, downloaded model, account, external service or model checkpoint is required.
 
@@ -54,7 +52,7 @@ Image-fed Lens experiments are excluded.
 
 See [training and development workflows](docs/TRAINING.md) for the bounded
 trajectory optimizer, root-isolated MNIST mean-risk fitting API and exact release
-manifest references. These mechanisms do not claim historical result reproduction.
+manifest references.
 
 ## Models and reproducibility
 
@@ -62,16 +60,16 @@ Model files are hosted separately in four [public Hugging Face repositories](doc
 
 ## Project and history
 
-Daniel Jackson develops Synaptic Lens as an independent research project. AI tools assist engineering and curation; that assistance does not independently validate research claims. This repository contains a deliberately selected development history and a curated distribution, not a complete record of every experiment or development step. Selected historical commits retain original source authorship and author dates; curation is recorded separately.
+Daniel Jackson develops Synaptic Lens as an independent research project. AI tools assist engineering and curation. This repository contains a deliberately selected development history and a curated distribution, not a complete record of every experiment or development step. Selected historical commits retain original source authorship and author dates; curation is recorded separately.
 
 [Selected references](docs/REFERENCES.md) explain which sources informed the reader design and which algorithms/software the project uses. They distinguish design motivation from reproduction or validated capability. A [BibTeX bibliography](docs/references.bib) is included.
 
 ## License and citation
 
-The source code uses the unmodified [AI Pubs research-use RAIL-S license, Version 0.1, March 2, 2023](LICENSE.md). Its permitted purpose is academic or research use only, subject to the full license and use restrictions. This is not a general noncommercial-use license; it does not categorically prohibit ICE or all weapons uses. Retain the attribution in [NOTICE](NOTICE).
+The source code uses the [AI Pubs research-use RAIL-S license, Version 0.1, March 2, 2023](LICENSE.md). Its permitted purpose is academic or research use only, subject to the full license and use restrictions. Retain the attribution in [NOTICE](NOTICE).
 
-The companion unmodified [AI Pubs research-use RAIL-M license, Version 0.1](LICENSE-MODEL.md) applies only to model files expressly designated in a release manifest or model card. It does not license complementary software or documentation, datasets, or third-party materials. Its inclusion here does not license absent checkpoints. These are use-restricted licenses, not OSI-approved open-source licenses.
+The companion [AI Pubs research-use RAIL-M license, Version 0.1](LICENSE-MODEL.md) applies only to model files expressly designated in a release manifest or model card. It does not license complementary software or documentation, datasets, or third-party materials. Its inclusion here does not license absent checkpoints.
 
 Third-party dependencies and separately licensed materials retain their own licenses. Earlier copies remain subject to the terms under which they were provided.
 
-If you use the software in research, please cite this repository and the revision used. [CITATION.cff](CITATION.cff) provides citation metadata; this citation request is not an additional license condition.
+If you use the software in research, please cite this repository and the revision used. [CITATION.cff](CITATION.cff) provides citation metadata.
