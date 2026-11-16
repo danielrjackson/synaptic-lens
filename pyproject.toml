@@ -7,13 +7,14 @@ requires-python = ">=3.13"
 license = "LicenseRef-AI-Pubs-Research-use-RAIL-S-0.1"
 license-files = ["LICENSE.md", "LICENSE-MODEL.md", "NOTICE"]
 authors = [{name = "Daniel Jackson"}]
-dependencies = ["torch>=2.14", "numpy>=2"]
+dependencies = ["torch>=2.15", "numpy>=2.5.5"]
 
 [project.optional-dependencies]
-test = ["pytest>=8"]
+test = ["pytest>=9.2"]
+hub = ["huggingface-hub>=2.4"]
 
 [build-system]
-requires = ["setuptools>=77"]
+requires = ["setuptools==84.2.1"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -22,3 +23,14 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests/core"]
+
+[tool.uv]
+required-version = "==0.13.8"
+
+[[tool.uv.index]]
+name = "pytorch-cu134"
+url = "https://download.pytorch.org/whl/cu134"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu134", marker = "sys_platform == 'win32' or sys_platform == 'linux'" }]

@@ -37,11 +37,9 @@ CPU/GPU wheel, then install this checkout with `python -m pip install -e ".[test
 Run `python -m pytest`, `python examples/train_observer.py`, `python examples/inspect_target.py`, and
 `python examples/synthetic_allocation.py` from the repository root.
 
-Validation used Python 3.13.3 and PyTorch 2.14.0 on CPU under Windows,
-and a separate clean installation resolved PyTorch 2.15.0 and NumPy 2.5.4.
-The original environment used the CPU path of a CUDA-enabled wheel.
-Other platforms and older PyTorch versions have not been independently checked
-for this curated distribution. The dependency floor conservatively reflects the
-validated version.
+The current environment uses Python 3.15.2, PyTorch 2.15.0+cu134 and NumPy
+2.5.5 on Windows x64. The CUDA dependency profile and pinned development tooling
+are documented in [Dependencies](DEPENDENCIES.md). Historical software checks
+used earlier Python/PyTorch environments; their original evidence is retained.
 
 The milestone integration passed 95 core tests on Python 3.13/PyTorch 2.14 CPU. Independently reviewed focused tests passed as well. Local real-artifact smoke checks exercised all four stripped SYN53/MNIST exports and the SYN88 four-root fixture. These checks validate loader and inference paths.

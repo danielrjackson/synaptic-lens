@@ -15,10 +15,11 @@ SHA-256 values in [releases.json](releases.json).
 
 Use a separate small environment for downloads. The downloaded paths can be
 passed to inference running in your existing PyTorch environment. This keeps
-optional network tooling separate from the project's tested CPU dependencies.
+optional network tooling separate from the training environment. The maintained
+CUDA environment also includes it with `uv sync --locked --extra hub`.
 
 ```powershell
-py -3.13 -m venv .venv-hub
+py -3.15 -m venv .venv-hub
 .\.venv-hub\Scripts\python.exe -m pip install "huggingface_hub==2.4.0"
 .\.venv-hub\Scripts\python.exe scripts/download_models.py
 ```

@@ -23,15 +23,27 @@ SYN88 reader and one target root, verifies their hashes, and reports predictions
 across its training ages. [Model downloads](docs/DOWNLOADS.md) cover all four
 published Lens and target releases, with pinned revisions and cache reuse.
 
-## Try a small CPU example
+## Install the current CUDA environment
 
-Use Python 3.13 or later in a virtual environment. Install a CPU-compatible PyTorch build for your platform and pytest. For a default installation:
+The maintained environment uses Python 3.15.2, uv 0.13.8 and PyTorch 2.15.0
+with CUDA 13.4. The lock includes the runtime, test and optional Hub dependencies.
+See [dependencies and validation](docs/DEPENDENCIES.md) for platform requirements,
+CPU options and upgrade details.
 
-```sh
-python -m pip install -e ".[test]"
-python examples/train_observer.py
-python examples/inspect_target.py
-python examples/synthetic_allocation.py
+```powershell
+uv sync --locked --extra test --extra hub
+uv run --locked python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+uv run --locked --extra test pytest
+```
+
+## Try the small CPU fixtures
+
+The following self-contained fixtures keep their small CPU budget:
+
+```powershell
+uv run --locked python examples/train_observer.py
+uv run --locked python examples/inspect_target.py
+uv run --locked python examples/synthetic_allocation.py
 ```
 
 The learned-observer example generates small addition networks, keeps whole target runs in separate train/validation/test partitions, and fits raw/structured observers against statistics-ridge and train-mean controls. It uses a fixed small CPU budget and automatically removes temporary targets.

@@ -1,4 +1,4 @@
-"""Show a pretrained SYN88 Lens reading addition-network lifetimes on CPU."""
+"""Show a pretrained SYN88 Lens reading addition-network lifetimes on CUDA or CPU."""
 from pathlib import Path
 import argparse
 import io
@@ -40,7 +40,10 @@ def main():
     parser.add_argument("--targets", type=Path, required=True,
                         help="Published SYN88 numeric root bundle")
     parser.add_argument("--targets-sha256", required=True)
+    parser.add_argument("--device", choices=["cuda", "cpu"], default="cuda")
     args = parser.parse_args()
+    if args.device == "cuda" and not torch.cuda.is_available():
+        parser.error("CUDA is unavailable; install the CUDA profile or select --device cpu")
     payload = verified_bytes(args.targets, args.targets_sha256)
     with np.load(io.BytesIO(payload), allow_pickle=False) as data:
         weights = data["weights"].copy()
@@ -53,6 +56,7 @@ def main():
     torch.set_num_threads(1)
     torch.set_float32_matmul_precision("highest")
     model, norm = load_model(args.checkpoint, CHECKPOINT_SHA256)
+    model = model.to(args.device)
     logits = predict(model, norm, weights)
     rows = []
     for rule in range(2):
@@ -63,7 +67,7 @@ def main():
     print(json.dumps({
         "model": "SYN88 trajectory seed 27, update 17000",
         "selection": "Lowest saved validation objective among the three released trajectory seeds",
-        "scope": "CPU inference on the supplied root; sample-level descriptive metrics",
+        "scope": f"{args.device.upper()} inference on the supplied root; sample-level descriptive metrics",
         "input": "Canonical target weights, arithmetic queries, query-aligned hidden activations",
         "summary": summarize(logits, labels), "by_rule_and_age": rows,
     }, indent=2))
