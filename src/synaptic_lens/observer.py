@@ -139,16 +139,20 @@ def fit_lens(train_x, train_y, val_x, val_y, *, epochs=200, seed=7):
 
 
 @torch.no_grad()
-def predict_lens(bundle, x):
+def predict_lens(bundle, x, *, device="cpu"):
     model = Lens(bundle["features"])
     model.load_state_dict(bundle["state_dict"])
+    model = model.to(device)
     model.eval()
+    x = x.to(device)
+    mean, scale = bundle["mean"].to(device), bundle["scale"].to(device)
+    y_mean, y_scale = bundle["y_mean"].to(device), bundle["y_scale"].to(device)
     # Batch inference also handles larger saved populations without huge buffers.
     original_shape = x.shape[:-1]
     flat = x.reshape(-1, x.shape[-1])
     result = [
         (
-            (model((b - bundle["mean"]) / bundle["scale"]) * bundle["y_scale"]) + bundle["y_mean"]
+            (model((b - mean) / scale) * y_scale) + y_mean
         ).clamp_min(0)
         for b in flat.split(1024)
     ]

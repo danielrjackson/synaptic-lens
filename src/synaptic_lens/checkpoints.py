@@ -1,4 +1,4 @@
-"""CPU-only, hash-bound inference for selected historical milestone checkpoints.
+"""Hash-bound inference for selected historical milestone checkpoints.
 
 No downloads and no unrestricted pickle fallback. A supplied hash establishes
 file identity, not trust: obtain files and expected hashes from trusted sources.
@@ -106,7 +106,7 @@ def flatten_target(state, schema):
     return torch.cat(pieces).unsqueeze(0), layout
 
 
-def predict_mnist(name, bundle, target_path, target_sha256, schema_path):
+def predict_mnist(name, bundle, target_path, target_sha256, schema_path, *, device="cpu"):
     """Predict scalar mean CE from target weights, never from images or labels."""
     if name not in ("mnist-raw", "mnist-statistics"):
         raise ValueError("Expected MNIST milestone")
@@ -118,7 +118,7 @@ def predict_mnist(name, bundle, target_path, target_sha256, schema_path):
     if name == "mnist-statistics":
         x = layer_statistics(x, layout)
     with torch.inference_mode():
-        prediction = predict_lens(bundle, x)
+        prediction = predict_lens(bundle, x, device=device)
     if not torch.isfinite(prediction).all():
         raise ValueError("Nonfinite prediction")
     return float(prediction.item())

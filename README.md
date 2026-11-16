@@ -18,12 +18,16 @@ Other studies explore weights-only competence prediction, query-based attention 
 - Detached allocation policies, antithetic optimizer updates, ranking/AUC and table export.
 - Small deterministic tests for numeric coverage, masking, permutations, queries and reconstruction contracts.
 
-## Try a pretrained Adder Lens
+## Try the pretrained readers
 
 The [pretrained Adder walkthrough](docs/ADDER_EXAMPLE.md) downloads the featured
 SYN88 reader and one target root, verifies their hashes, and reports predictions
 across its training ages. [Model downloads](docs/DOWNLOADS.md) cover all four
 published Lens and target releases, with pinned revisions and cache reuse.
+
+The [image-recognition walkthrough](docs/IMAGE_EXAMPLE.md) runs the released MNIST
+tensor-statistics Lens. It reads a classifier’s saved parameters and predicts
+its mean classification loss. Both walkthroughs default to CUDA.
 
 ## Install the current CUDA environment
 

@@ -29,8 +29,8 @@ evaluation suite.
 The implementation uses the public `Lens`, `fit_lens`, `layer_statistics` and
 `predict_lens` functions in `synaptic_lens.observer`. Its frozen source SHA-256
 is `82ed9223874fa81ed743bf83470caa075eba4183b5be4f580bd19303b87983d1`.
-The public observer source matches that implementation after normalizing
-checkout line endings.
+The public observer retains that architecture and feature construction, with
+optional device selection added for CUDA inference.
 
 The following sizes and hashes identify the **historical original bundles**,
 with separate identities for the downloadable inference exports. Export hashes
@@ -79,7 +79,9 @@ These saved development results motivate further root-disjoint confirmation.
 
 ## Local inference and reproduction limits
 
-After downloading the matching inference-only Lens export, target checkpoint
+The [image Lens walkthrough](../IMAGE_EXAMPLE.md) downloads and runs the featured
+tensor-statistics reader on CUDA. For the lower-level inference interface,
+after downloading the matching inference-only Lens export, target checkpoint
 and coordinate schema, use:
 
 ```sh

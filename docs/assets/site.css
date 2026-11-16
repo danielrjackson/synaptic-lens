@@ -4,3 +4,9 @@
 .brand{display:inline-flex;align-items:center;gap:10px;color:var(--teal)}.brand-logo{display:block;width:64px;height:64px;object-fit:contain;flex:none}footer .brand-logo{width:48px;height:48px}.button{background:var(--teal)}.button:hover{background:#1b6242}.button.light{background:var(--lime);color:var(--dark)}.button.light:hover{background:#ffd16b}a:focus-visible{outline-color:#a55e00}@media(max-width:620px){header{padding-top:14px;padding-bottom:17px}.brand-logo{width:52px;height:52px}}
 /* Balance the wordmark with the full-size brain logo. */
 header .brand{font-size:40px;line-height:1.1;letter-spacing:-1.2px}@media(max-width:850px){header{gap:18px}header .brand{font-size:34px}nav{gap:20px}}@media(max-width:620px){header .brand{font-size:32px;letter-spacing:-.9px}}
+
+.workflow { margin: 2rem 0; }
+.workflow img { display: block; width: 100%; height: auto; border-radius: 16px; }
+.workflow figcaption { margin-top: .75rem; font-size: .9rem; line-height: 1.5; }
+
+nav { flex-wrap: wrap; }

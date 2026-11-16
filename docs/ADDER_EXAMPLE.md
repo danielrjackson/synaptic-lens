@@ -2,6 +2,8 @@
 
 The featured checkpoint is **SYN88 trajectory seed 27, update 17,000**. Its saved validation objective is 0.0118825018171426, the lowest of the three released trajectory seeds (seed 17: 0.0119932298803155; seed 7: 0.0121899403533255). Each seed's checkpoint was selected by the frozen full-trajectory validation objective. The example uses this validation ranking to select its featured model.
 
+![Target weights, an addition query and query-aligned hidden activations feed a reader that predicts answer correctness.](assets/adder-lens-workflow.png)
+
 ## Run the reader
 
 Use the [download setup](DOWNLOADS.md) once, then run these commands from the
@@ -39,7 +41,7 @@ The saved, reconciled SYN88 evaluation covers 512 root families, two rules and e
 | Macro Brier score | 0.002976 |
 | Macro log loss | 0.011131 |
 
-AUROC averages supported queries within rule-by-age cells; homogeneous query strata have no defined AUC. The benchmark measures transfer across independent target roots. The arithmetic inputs are the same complete 100-query suite used to train each target. These are historical results on the released population. New claims about generalization call for separately reserved target roots and a frozen evaluation protocol.
+AUROC averages supported queries within rule-by-age cells; homogeneous query strata have no defined AUC. The benchmark measures transfer across independent target roots. The arithmetic inputs are the same complete 100-query suite used to train each target. These are historical results on the released population.
 
 The inference export is 26,282 bytes, with SHA-256 `20cf06bf7599c457b56e42c381c7876ba2119985a98bb0a36a8633e3cffd614f`. See the [trajectory milestone](milestones/adder-trajectory.md), [artifact catalog](ARTIFACTS.md), and [generation protocol](milestones/syn88-generation.md) for input contracts and provenance. CPU and archived GPU arithmetic can differ slightly; the example reports its selected device and current calculation.
 ## Evidence identities
