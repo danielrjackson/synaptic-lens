@@ -4,7 +4,9 @@ Research software for asking what a neural network's weights reveal about its be
 
 ## Research highlights
 
-The work spans weights-only competence prediction, query-based attention readers, network activations, and controlled allocation of training effort. [Selected research results](docs/RESULTS.md) present the evidence and contrary findings: a structured observer outperformed strong shortcut baselines in a narrow output-rewiring study; regional attention improved probability estimates without establishing reliable query localization; learned allocation showed mixed gains at substantial probe cost.
+The featured Adder Lens predicted target-network correctness with **99.6167% accuracy** across 819,200 queries from 512 independent target-root families in its saved evaluation. It reads target weights, arithmetic queries and query-aligned hidden activations. See the [Adder walkthrough](docs/ADDER_EXAMPLE.md) for the model, benchmark and runnable example.
+
+Other studies explore weights-only competence prediction, query-based attention readers and allocation of training effort. A structured observer outperformed parameter-statistics baselines on output-rewired addition networks, and regional attention improved probability estimates. [Selected research results](docs/RESULTS.md) include the comparisons, unsuccessful approaches and evaluation methods.
 
 ## What is here
 
@@ -38,7 +40,7 @@ uv run --locked --extra test pytest
 
 ## Try the small CPU fixtures
 
-The following self-contained fixtures keep their small CPU budget:
+These self-contained examples run on CPU:
 
 ```powershell
 uv run --locked python examples/train_observer.py
@@ -48,9 +50,9 @@ uv run --locked python examples/synthetic_allocation.py
 
 The learned-observer example generates small addition networks, keeps whole target runs in separate train/validation/test partitions, and fits raw/structured observers against statistics-ridge and train-mean controls. It uses a fixed small CPU budget and automatically removes temporary targets.
 
-The record-inspection example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs. This CPU-only example checks record construction and output reconstruction using locally generated inputs.
+The record-inspection example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs. The inputs are generated locally.
 
-The allocation example demonstrates normalized allocation weights computed from synthetic losses. [Public scope and validation](docs/PUBLIC_SCOPE.md) describe the included interfaces, intentional omissions and tested environment.
+The allocation example demonstrates normalized allocation weights computed from synthetic losses. [Public scope and validation](docs/PUBLIC_SCOPE.md) describes the included interfaces and test coverage.
 
 To run the selected core tests from the repository root:
 
@@ -62,12 +64,7 @@ For platform-specific PyTorch installation options, see the [official installati
 
 ## Trained Lens milestones
 
-The [milestone catalog](docs/milestones/README.md) separates arithmetic-target
-readers (including the later activation-assisted trajectory reader) from weights-only observers of image-recognition targets. It documents
-selected trained checkpoints, exact input contracts, saved comparisons (including
-negative results), and hash-verified local inference commands. Selected checkpoints and target populations are now available on Hugging Face;
-see [published artifacts](docs/ARTIFACTS.md) for exact releases and limitations.
-Image-fed Lens experiments are excluded.
+The [milestone catalog](docs/milestones/README.md) covers arithmetic readers and weights-only observers of image-recognition targets. Each page describes the reader's inputs, trained checkpoints, results and inference commands. Download the checkpoints and target populations from [Hugging Face](docs/ARTIFACTS.md).
 
 See [training and development workflows](docs/TRAINING.md) for the bounded
 trajectory optimizer, root-isolated MNIST mean-risk fitting API and exact release
@@ -75,13 +72,13 @@ manifest references.
 
 ## Models and reproducibility
 
-Model files are hosted in four [public Hugging Face repositories](docs/ARTIFACTS.md). The example and core unit tests generate their own small inputs and do not depend on those artifacts. Reproducing trained-model research findings requires the relevant checkpoint, dataset and protocol. The small runnable example exercises the software workflow.
+Model files are hosted in four [public Hugging Face repositories](docs/ARTIFACTS.md). The pretrained walkthrough uses released artifacts; the small CPU fixtures and core unit tests generate their own inputs. Each milestone documents its checkpoints, data requirements and evaluation protocol.
 
 ## Project and history
 
 Daniel Jackson develops Synaptic Lens as an independent research project. AI tools assist engineering and curation. This repository presents selected development milestones and reusable research software. Selected historical commits retain original source authorship and author dates; curation is recorded separately.
 
-[Selected references](docs/REFERENCES.md) explain which sources informed the reader design and which algorithms/software the project uses. They distinguish design motivation from reproduction or validated capability. A [BibTeX bibliography](docs/references.bib) is included.
+[Selected references](docs/REFERENCES.md) describe the research behind the reader design and the algorithms and software used here. A [BibTeX bibliography](docs/references.bib) is included.
 
 ## License and citation
 

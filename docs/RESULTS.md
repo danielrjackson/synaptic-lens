@@ -3,16 +3,13 @@
 Synaptic Lens studies whether a separate network can predict another network's
 behavior from its parameters. These selected studies show the progression from
 competence prediction to query-specific readers and controlled training
-interventions. The evidence includes favorable results, failures and contrary
-diagnostics. These studies use small arithmetic target networks.
+interventions using small arithmetic target networks.
 
 The tables below summarize **historical saved evaluations**.
 The accompanying JSON files contain the reported numeric summaries.
 [Provenance](results/provenance.json) identifies the source reports by SHA-256;
 the original complete checkpoints and execution records are not distributed here.
-These hashes identify source records. Complete numerical reproduction requires
-the corresponding study inputs and protocol; the runnable examples exercise
-the software workflow.
+Each study's inputs and protocol are needed to reproduce its evaluation.
 
 ## 1. A structural observer beats shortcuts in a controlled population
 
@@ -46,11 +43,9 @@ uses privileged training-age metadata.
 retain RMSE, R-squared and comparisons against the step baseline. Checkpoints
 from one target run are correlated; uncertainty resamples whole runs. The study used
 one fitted structured observer.
-Architecture, capacity, normalization and optimization also differed. The result
-supports useful prediction within this controlled target population. Causal
-localization and broader architecture transfer remain research questions.
+Architecture, capacity, normalization and optimization also differed between methods.
 
-## 2. Better probabilities are not necessarily better localization
+## 2. Regional attention improves probability estimates
 
 A later attention reader compared two added input/output branches. The
 **capacity control** could attend to all valid tokens; the **regional arm** was
@@ -78,10 +73,7 @@ matched-false-positive-rate swap envelope equaled or exceeded treatment at every
 attainable budget. Rare early/partial correct answers remained missed.
 
 AUROC is defined only for mixed correct/wrong states: 2,106 of the 6,400 original
-DEV states. Homogeneous states are not filled with a pooled surrogate. These
-results support better probability estimation in this run. Reliable query
-localization remains unresolved. The comparison used one training fork and
-previously available development data. [Machine-readable table](results/boundary-attention.json).
+DEV states. Homogeneous states are not filled with a pooled surrogate. The comparison used one training fork and previously available development data; reliable query localization remains unresolved. [Machine-readable table](results/boundary-attention.json).
 
 ## 3. Learned training allocation: mixed gains, substantial cost
 
@@ -109,10 +101,8 @@ six-family development-exposed check, the final joint adaptation retained
 and mean BCE rose from 0.332 to 1.326 versus the original checkpoint. The trained-anchor and broader-family metrics diverged. These six correlated
 families had already been exposed during development. [Machine-readable summaries](results/allocation.json).
 
-## What the portfolio demonstrates
+## Evaluation methods
 
-The contribution here is a research process as well as code: invariant
-representations, family-aware evaluation, matched controls, preselected
-endpoints, explicit accounting of training/probe cost, and diagnostics that
-expose misleading aggregate success. Generalization, reliable failure-pattern
-recognition and causal interpretation remain open questions.
+These studies use whole-family splits and uncertainty estimates, matched
+controls, preselected endpoints, and accounting for training and probe costs.
+Query-level and subgroup diagnostics show where aggregate scores hide failures.

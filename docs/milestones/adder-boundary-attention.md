@@ -85,7 +85,6 @@ splits, labels, metric definitions and evaluation script to the historical
 protocol. Those complete study inputs are not distributed here. Generated toy
 records exercise the interface; the study evaluation uses its recorded population.
 
-Future inference packaging should load only the model state and configuration
-needed for prediction, rather than requiring optimizer state, sampler state or
-the original operational training environment. Preserve the original artifact
-hashes as provenance if a separate inference-only format is exported.
+The published inference exports contain the model state and configuration needed
+for prediction. Their manifests record both the export and original checkpoint
+hashes.

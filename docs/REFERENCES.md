@@ -19,6 +19,4 @@ These sources motivate the target-record representation and paired attention rea
 - **Decoupled Weight Decay Regularization** (Loshchilov and Hutter, ICLR 2019). [Source](https://arxiv.org/abs/1711.05101)
 - **PyTorch documentation**. [Source](https://docs.pytorch.org/docs/stable/index.html)
 
-The project uses PyTorch, including Adam-family optimization. The research training implementation constructs AdamW and saves/restores optimizer state. These citations credit the algorithms and software used. The exact first-adoption date and historical documentation versions are not established. Historical implementation milestones need not contain every component of the current project.
-
-Speculative proposals, news briefings, unadopted alternatives and operational migration references are deliberately excluded. This selected bibliography documents the project's design and implementation sources. Paper citations do not replace applicable software licenses or third-party notices.
+The project uses PyTorch and Adam-family optimization. The research training implementation uses AdamW and saves and restores optimizer state. These references cover the algorithms and software used; software licenses and third-party notices apply separately.

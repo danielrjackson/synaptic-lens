@@ -2,8 +2,7 @@
 
 Code lives in this GitHub repository; checkpoints, target populations and their
 integrity/provenance manifests live in the following public Hugging Face repos.
-Pin a revision and verify manifest SHA-256 values rather than silently using a
-changing `main`. These releases were verified against the staged payload hashes.
+Use a pinned revision and verify the manifest SHA-256 values for repeatable downloads. These releases were verified against the staged payload hashes.
 
 | Repository | Published contents | Verified revision |
 | --- | --- | --- |

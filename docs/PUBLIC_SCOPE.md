@@ -20,15 +20,12 @@ an ordinary small neural network. The small CPU
 examples need no stored model or dataset. Allocation weights demonstrate the policy mechanism. Training-performance
 measurements are reported separately in the research results.
 
-## Deliberate omissions
+## Repository contents
 
 Study orchestration, private working notes, agent coordination, operational
 supervision and storage management are outside this small distribution. So are
 unselected study checkpoint adapters, pretrained weights, dataset caches and
-training outputs. Selected hash-bound inference adapters are included for SYN53, SYN88 and the direct-weight MNIST comparison; see the [milestone catalog](milestones/README.md). These adapters do not include the weights or reproduce complete study evaluations. The public core tests do not certify omitted study runners.
-No claims of trained-model accuracy, fresh-model generalization or causal
-interpretation follow from these software checks. Historical numerical evidence
-and its specific limitations are separately curated in [Selected results](RESULTS.md).
+training outputs. Selected hash-bound inference adapters are included for SYN53, SYN88 and the direct-weight MNIST comparison; see the [milestone catalog](milestones/README.md). Download the matching weights from the [artifact catalog](ARTIFACTS.md). Tests check the included software; trained-model evaluations are documented in [Selected results](RESULTS.md) and the milestone pages.
 
 ## Reproducing software checks
 
