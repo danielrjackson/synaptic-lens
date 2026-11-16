@@ -1,8 +1,8 @@
-"""A tiny CPU learned-observer workflow, not a reproduction of research results.
+"""A small CPU example: train addition networks, then learn to predict their loss.
 
 Run from a checkout with: python examples/train_observer.py
 Targets learn addition; observers see only saved weights. Target training and
-measurement use the same 100 cases, so this is NOT unseen-input generalization.
+measurement use the same complete 100-case addition suite.
 All generated target files live in an automatically cleaned temporary directory.
 """
 from pathlib import Path
@@ -50,7 +50,7 @@ def run_demo(*, runs=20, steps=12, epochs=30):
             "structured_weights": predict_structured(structured, weights[test]),
         }
         report = {
-            "scope": "Tiny fixed-budget software demonstration, not research replication or evidence of superiority",
+            "scope": "Small fixed-budget training example",
             "target_training_suite": "All 100 ordered digit pairs; measurement uses these same cases",
             "device": "cpu", "runs": runs, "target_steps": steps, "observer_epochs": epochs,
             "split_run_ids": {k: v.tolist() for k, v in partitions.items()},
@@ -59,7 +59,7 @@ def run_demo(*, runs=20, steps=12, epochs=30):
             "test_metrics": {k: metrics(truth, p) for k, p in predictions.items()},
             "structured_vs_statistics_run_bootstrap": paired_run_bootstrap(
                 truth, predictions["structured_weights"], predictions["statistics_ridge"]),
-            "uncertainty_limit": "Illustrative whole-run resampling of a tiny test split; not independent observer or population replication",
+            "uncertainty_limit": "Whole-run resampling within this small test split",
         }
         return report
     finally:

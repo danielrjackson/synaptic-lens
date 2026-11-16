@@ -29,6 +29,11 @@ The [image-recognition walkthrough](docs/IMAGE_EXAMPLE.md) runs the released MNI
 tensor-statistics Lens. It reads a classifier’s saved parameters and predicts
 its mean classification loss. Both walkthroughs default to CUDA.
 
+[Train your own Adder Lens](docs/TRAINING.md#train-an-adder-lens-and-compare-it-with-the-released-model)
+downloads trained targets, fits the same reader architecture and compares your
+model with the featured Lens on the same queries. It saves your checkpoint,
+metrics and a spreadsheet-friendly prediction table.
+
 ## Install the current CUDA environment
 
 The maintained environment uses Python 3.15.2, uv 0.13.8 and PyTorch 2.15.0

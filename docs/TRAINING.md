@@ -1,6 +1,51 @@
 # Training and development workflows
 
-## Lifetime adder reader
+## Train an Adder Lens and compare it with the released model
+
+From the repository root:
+
+```sh
+uv sync --locked --extra hub
+uv run --locked --extra hub python examples/train_compare_adder.py
+```
+
+This downloads the featured Lens and twelve target-root bundles, verifies their
+hashes, and trains the same output-centered Lens architecture on CUDA. Eight
+roots are used for fitting, two for validation selection and two for comparison.
+These are fixed subsets of the original training, validation and test partitions.
+Both target training rules and every age stay with their root.
+
+The default is 100 updates. The example writes three files to
+`runs/adder-comparison`:
+
+- `your-lens.npz`: your trained reader, including its normalization.
+- `comparison.json`: both readers' accuracy and Brier score on exactly the same
+  3,200 comparison queries, training history, root IDs and artifact hashes.
+- `predictions.csv`: one row per digit pair, rule and age, with the target's
+  correctness and each reader's predicted probability. Open it in a spreadsheet
+  to inspect where they agree or differ.
+
+**Reading the comparison:** higher correctness-prediction accuracy is better;
+lower Brier score means the probabilities are closer to the actual outcomes.
+The featured reader trained on 1,536 roots. Your eight-root run is a small
+training exercise using the same architecture. Its measured results appear
+beside the featured model's results for these two comparison roots.
+
+To train longer while keeping the first run:
+
+```sh
+uv run --locked --extra hub python examples/train_compare_adder.py --updates 1000 --output runs/adder-1000
+```
+
+Use validation history to choose your training budget. Once you inspect the
+comparison results, those roots serve as a development comparison; use fresh,
+unexamined roots for a later final evaluation.
+
+Add `--local-files-only` to repeat a run using cached downloads. Add
+`--cache-dir PATH` to choose the cache, or `--device cpu` for the optional CPU
+path. Each run requires a new output directory to preserve earlier models.
+
+## Lifetime adder reader API
 
 Run the bounded CPU smoke after installing this repository:
 
@@ -20,7 +65,7 @@ must be explicit and disjoint. Paired births must match. Independent native
 forward calculations check the saved labels and canonicalization. TRAIN alone
 fits normalization in float64; features become float32 afterward.
 
-`trajectory_training.train_trajectory` exposes a fixed-budget CPU runner for
+`trajectory_training.train_trajectory` exposes a fixed-budget CUDA/CPU runner (select `device="cuda"`) for
 trajectory and checkpoint25 arms. The latter always trains on age 25; evaluation
 still covers all eight ages. `HISTORICAL_RECIPE` records three seeds, batch size
 24 roots, AdamW learning rate 0.001/weight decay 0.01, ten-query chunks, validation
@@ -33,9 +78,7 @@ accepted by the fitting API. Saved historical test results have already been exa
 models with their recorded artifact identities.
 
 The earlier SYN53 development endpoints remain available through the existing
-boundary-reader loader and milestone documentation. A portable reproduction of
-that complete continuation is not claimed by this trajectory runner. Its sealed
-holdout is excluded.
+boundary-reader loader and milestone documentation. The complete continuation and its sealed holdout remain in the research archive.
 
 ## Network-only MNIST mean-risk observers
 
@@ -79,6 +122,7 @@ the milestone page preserves the complete comparison.
 [releases.json](releases.json) pins the four public repositories, manifest hashes
 and selected file hashes. This compact index points to the pinned manifests containing all target
 entries. Optimizer/RNG state was stripped from
-inference exports. Full historical side-study query/label reconstruction and
-SYN53 continuation remain separate provenance gates. Broader vision semantic
-repairs and later study claims are not promoted by these APIs.
+inference exports. The historical MNIST query-ID manifests and measured labels are still needed
+for a download–train–compare image walkthrough. The released image example
+currently covers downloading and inference; the Adder example above covers
+the complete training and comparison workflow.

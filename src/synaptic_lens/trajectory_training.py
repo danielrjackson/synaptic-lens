@@ -239,8 +239,9 @@ def train_trajectory(
     seed=7,
     arm="trajectory",
     validation_every=1000,
+    device="cpu",
 ):
-    """Fit one fixed-budget CPU cell and select on validation, never test.
+    """Fit one fixed-budget cell on CUDA or CPU; select using validation.
 
     For the historical configuration use HISTORICAL_RECIPE explicitly. This
     function does not resume inference exports or recreate private common-stop
@@ -250,14 +251,24 @@ def train_trajectory(
         raise ValueError("Unknown training arm")
     if type(validation_every) is not int or validation_every < 1:
         raise ValueError("Positive validation interval required")
+    device = torch.device(device)
+    if device.type not in ("cpu", "cuda"):
+        raise ValueError("Choose CUDA or CPU")
+    if device.type == "cuda" and not torch.cuda.is_available():
+        raise ValueError("CUDA is unavailable; install the CUDA profile or select CPU")
+    if device.type == "cuda" and torch.get_float32_matmul_precision() != "highest":
+        raise ValueError("SYN88 requires highest float32 matmul precision")
     schedule = make_schedule(len(train.root_ids), updates, batch_roots, (seed,))
     if train.weights.device.type != "cpu" or validation.weights.device.type != "cpu":
-        raise ValueError("This portable runner currently supports CPU only")
+        raise ValueError("Supply CPU populations for float64 preparation; select the training device with device=")
     training, development, norm = prepare_training_validation(train, validation)
+    training = {k: v.to(device) if isinstance(v, torch.Tensor) else v for k, v in training.items()}
+    development = {k: v.to(device) if isinstance(v, torch.Tensor) else v for k, v in development.items()}
     history = []
-    with torch.random.fork_rng(devices=[]):
+    rng_devices = [device.index if device.index is not None else torch.cuda.current_device()] if device.type == "cuda" else []
+    with torch.random.fork_rng(devices=rng_devices):
         torch.manual_seed(seed)
-        model = OutputCentered()
+        model = OutputCentered().to(device)
         optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=0.01)
         best_loss, best_update, selected = float("inf"), 0, None
         for update in range(updates + 1):
@@ -267,7 +278,7 @@ def train_trajectory(
                     schedule["roots"][0, update - 1],
                     schedule["ages"][0, update - 1],
                     arm,
-                    torch.device("cpu"),
+                    device,
                 )
                 model.train()
                 optimizer.zero_grad(set_to_none=True)
@@ -287,7 +298,7 @@ def train_trajectory(
                 optimizer.step()
             if update == 0 or update % validation_every == 0 or update == updates:
                 metric = val_metrics(
-                    predict(model, development, arm), development["labels"].numpy()
+                    predict(model, development, arm), development["labels"].cpu().numpy()
                 )
                 history.append({"update": update, "validation": metric})
                 if metric["full_trajectory_macro_loss"] < best_loss:
@@ -305,6 +316,7 @@ def train_trajectory(
             "completed_updates": updates,
             "arm": arm,
             "seed": seed,
+            "device": str(device),
             "history": history,
             "train_root_ids": list(train.root_ids),
             "validation_root_ids": list(validation.root_ids),

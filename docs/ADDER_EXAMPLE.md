@@ -6,20 +6,19 @@ The featured checkpoint is **SYN88 trajectory seed 27, update 17,000**. Its save
 
 ## Run the reader
 
-Use the [download setup](DOWNLOADS.md) once, then run these commands from the
+Install the [locked CUDA environment](DEPENDENCIES.md) with `uv sync --locked --extra hub`, then run these commands from the
 repository root in PowerShell. They fetch the pinned featured reader and root 0000,
 verify their hashes, and pass the resulting cached paths into the CUDA-default example:
 
 ```powershell
-$lens = .\.venv-hub\Scripts\python.exe scripts/download_models.py --release synaptic-lens-adder --file syn88/lens-trajectory-seed-27.npz | ConvertFrom-Json
-$target = .\.venv-hub\Scripts\python.exe scripts/download_models.py --release synaptic-lens-targets-adder --file syn88/population/root-0000.npz | ConvertFrom-Json
+$lens = uv run --locked --extra hub python scripts/download_models.py --release synaptic-lens-adder --file syn88/lens-trajectory-seed-27.npz | ConvertFrom-Json
+$target = uv run --locked --extra hub python scripts/download_models.py --release synaptic-lens-targets-adder --file syn88/population/root-0000.npz | ConvertFrom-Json
 $checkpoint = $lens.files.'syn88/lens-trajectory-seed-27.npz'.path
 $root = $target.files.'syn88/population/root-0000.npz'
 uv run --locked python examples/demo_adder_lens.py --checkpoint $checkpoint --targets $root.path --targets-sha256 $root.sha256
 ```
 
-The final command uses the locked project environment. The two
-download commands use the separate Hub environment. On other shells, copy the
+All three commands use the same locked project environment. On other shells, copy the
 `path` and `sha256` fields from the download commands' JSON output:
 
 ```console
@@ -50,3 +49,9 @@ The historical table comes from `analysis-report-reconciled-v2.md` (SHA-256 `958
 
 The walkthrough defaults to CUDA and fails clearly when CUDA is unavailable.
 Add `--device cpu` for the small CPU-only alternative.
+
+## Train your own
+
+The [training walkthrough](TRAINING.md#train-an-adder-lens-and-compare-it-with-the-released-model)
+downloads a small target population, trains the same Lens architecture and saves
+a side-by-side comparison with this featured reader.

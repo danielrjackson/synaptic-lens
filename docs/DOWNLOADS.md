@@ -13,7 +13,19 @@ SHA-256 values in [releases.json](releases.json).
 
 ## Install the download client
 
-Use a separate small environment for downloads. The downloaded paths can be
+For the standard walkthroughs, use the project's locked environment:
+
+```sh
+uv sync --locked --extra hub
+uv run --locked --extra hub python scripts/download_models.py
+```
+
+This lists the four releases. The image and train-and-compare examples select
+and download their required files automatically.
+
+### Separate download environment (optional)
+
+Use a separate small environment if you want downloads independent of PyTorch. The downloaded paths can be
 passed to inference running in your existing PyTorch environment. This keeps
 optional network tooling separate from the training environment. The maintained
 CUDA environment also includes it with `uv sync --locked --extra hub`.
