@@ -10,8 +10,8 @@ python examples/train_trajectory.py --updates 1
 
 It creates random synthetic target states, keeps paired rules and all ages with
 one root, fits one optimizer update, selects using a separate development root,
-and round-trips a numeric-only inference export. It does not reproduce research
-accuracy or resume a released inference checkpoint.
+and round-trips a numeric-only inference export. This is a software smoke check
+with synthetic inputs.
 
 `trajectory_data.TrajectoryPopulation` accepts manifest-verified float32 weights
 `[roots, 2, 8, 1299]` and binary addition-correct labels `[roots, 2, 8, 100]`.
@@ -26,11 +26,11 @@ still covers all eight ages. `HISTORICAL_RECIPE` records three seeds, batch size
 24 roots, AdamW learning rate 0.001/weight decay 0.01, ten-query chunks, validation
 every 1,000 updates and a maximum of 20,000 updates. The common historical stopping
 decision, interleaving across six cells and recovery ledger are not replayed.
-Running the full recipe is substantial work, not the default smoke example.
+Running the full recipe requires a substantially larger compute budget than
+the default smoke example.
 Validation selects the minimum full-trajectory macro objective; no test data is
-accepted by the fitting API. Saved historical test results are already examined,
-not a new blind benchmark. Use the released population to compare historical
-models, rather than pretending newly generated tensors are byte-identical.
+accepted by the fitting API. Saved historical test results have already been examined. Use the released population to compare historical
+models with their recorded artifact identities.
 
 The earlier SYN53 development endpoints remain available through the existing
 boundary-reader loader and milestone documentation. A portable reproduction of
@@ -52,7 +52,7 @@ it does not silently turn target partitions into historical observer partitions.
 Risk labels must refer to a documented, fixed evaluation suite. Validation alone
 selects the epoch; target-risk normalization and feature normalization are fitted
 on training roots. The 200-epoch setting matches the existing observer mechanism,
-not a claim that any caller-supplied dataset reproduces the archived study.
+with reproduction depending on the archived study's data and protocol.
 
 The recovered observer recipe uses roots 1007–1057 (six roots stepping by ten)
 for fitting, 1067/1077 for validation, and 1087/1097 for development. Each uses
@@ -71,14 +71,14 @@ and the MNIST milestone instructions. A hash-pinned statistics observer and root
 1007 at epoch one predicted 1.47582555 nats in the current CPU compatibility check,
 matching the rounded archived prediction. Only 155,994 checkpoint bytes were
 read from the public release; no images were used. This is one loader/inference
-check, not an evaluation rerun. Raw-weight Lens did not beat the constant
-baseline in the historical comparison; do not omit that negative result.
+check. The historical raw-weight Lens error exceeded the constant baseline;
+the milestone page preserves the complete comparison.
 
 ## Artifact identities and remaining gates
 
 [releases.json](releases.json) pins the four public repositories, manifest hashes
-and selected file hashes. It is a compact index, not a duplicate of every target
-entry; the pinned manifest gives all files. Optimizer/RNG state was stripped from
+and selected file hashes. This compact index points to the pinned manifests containing all target
+entries. Optimizer/RNG state was stripped from
 inference exports. Full historical side-study query/label reconstruction and
 SYN53 continuation remain separate provenance gates. Broader vision semantic
 repairs and later study claims are not promoted by these APIs.

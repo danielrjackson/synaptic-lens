@@ -19,46 +19,44 @@ use their published hashes with the matching inference example:
 
 - [SYN53 boundary-attention interface](milestones/adder-boundary-attention.md),
   with `predict_checkpoint.py --inference-export`. Its generated-fixture example
-  checks compatibility, not historical evaluation accuracy.
+  checks loader and inference compatibility.
 - [SYN88 trajectory interface](milestones/adder-trajectory.md), with
   [`predict_trajectory.py`](../examples/predict_trajectory.py). The adder-target
   repo also supplies a numeric-only NumPy quickstart that verifies native labels.
 - [MNIST direct-weight interface](milestones/mnist-direct-weights.md), with
   [`predict_checkpoint.py`](../examples/predict_checkpoint.py) and
   `--inference-export` for the stripped Lens exports. Use the target manifest's
-  hash and matching coordinate schema, not an arbitrary image-model checkpoint.
+  hash and matching coordinate schema.
 
 Inference-only exports omit optimizer/RNG state and cannot resume training.
-The [SYN88 target generator](milestones/syn88-generation.md) reproduces the target
-training recipe, not the complete historical Lens optimization/evaluation run.
+The [SYN88 target generator](milestones/syn88-generation.md) implements the target
+training recipe. Lens optimization and evaluation use separate workflows.
 
 ## Scope and limitations
 
 The SYN88 population has 1,536 training, 256 validation and 512 historical test
 roots. Each root contains two rules at eight ages: 36,864 recorded states, with
 34,560 distinct float32 tensor hashes because paired birth states are shared.
-Keep every state from a root in its assigned partition. Public historical test
-results are not a fresh blind holdout. The four-root smoke fixture is separate
-from, and not a substitute for, this full population.
+Keep every state from a root in its assigned partition. The historical test results have already been examined. The separate four-root smoke fixture supports a quick compatibility check;
+full-population evaluation uses all assigned roots.
 
 The SYN53 capacity-control and regional-input-output development endpoints are
 published as inference-only exports. The sealed early SYN53 holdout and complete
 SYN53 evaluation bundle are excluded; these two checkpoints do not enable a full
 reproduction of that study.
 
-MNIST target checkpoints are networks, **not images**. No raw MNIST image dataset,
+MNIST target checkpoints contain trained classifier parameters. No raw MNIST image dataset,
 external pretrained weights or image-fed Lens experiments are included. Consult
 the cards for data-source and preprocessing provenance. The two MNIST Lens
 checkpoints read weights or weight statistics, while SYN88 also uses queries and
-query-aligned hidden activations; these are not interchangeable input contracts.
-A successful load, smoke test or label check is not a new reproduction of the
-reported research metrics.
+query-aligned hidden activations. Each model requires its documented input contract.
+Load, smoke and label checks validate the artifact interfaces. Research metric
+reproduction additionally requires the study population and evaluation protocol.
 
 ## Terms
 
 Model files expressly designated by their cards/manifests use the unmodified
 AI Pubs research-use **RAIL-M 0.1**; accompanying software uses **RAIL-S 0.1**.
-These permit academic/research use subject to their full restrictions, not all
-noncommercial uses. They do not categorically exclude ICE or all weapons uses.
-Do not apply model terms to third-party datasets or other materials by inference.
+These permit academic/research use subject to their full restrictions.
+Third-party datasets and other materials retain their respective terms.
 See each repository's license files and notices for the actual terms.

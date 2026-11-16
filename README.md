@@ -29,9 +29,9 @@ python examples/synthetic_allocation.py
 
 The learned-observer example generates small addition networks, keeps whole target runs in separate train/validation/test partitions, and fits raw/structured observers against statistics-ridge and train-mean controls. It uses a fixed small CPU budget and automatically removes temporary targets.
 
-The record-inspection example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs. It does not train a reader or demonstrate learned prediction. No GPU, downloaded model, account, external service or model checkpoint is required.
+The record-inspection example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs. This CPU-only example checks record construction and output reconstruction using locally generated inputs.
 
-The allocation example computes normalized allocation weights from synthetic losses; it does not establish improved training performance. [Public scope and validation](docs/PUBLIC_SCOPE.md) describe the included interfaces, intentional omissions and tested environment.
+The allocation example demonstrates normalized allocation weights computed from synthetic losses. [Public scope and validation](docs/PUBLIC_SCOPE.md) describe the included interfaces, intentional omissions and tested environment.
 
 To run the selected core tests from the repository root:
 
@@ -56,11 +56,11 @@ manifest references.
 
 ## Models and reproducibility
 
-Model files are hosted separately in four [public Hugging Face repositories](docs/ARTIFACTS.md), not in this Git repository. The example and core unit tests generate their own small inputs and do not depend on those artifacts. Reproducing trained-model research findings requires the relevant checkpoint, dataset and protocol; the runnable example must not be mistaken for that reproduction.
+Model files are hosted in four [public Hugging Face repositories](docs/ARTIFACTS.md). The example and core unit tests generate their own small inputs and do not depend on those artifacts. Reproducing trained-model research findings requires the relevant checkpoint, dataset and protocol. The small runnable example exercises the software workflow.
 
 ## Project and history
 
-Daniel Jackson develops Synaptic Lens as an independent research project. AI tools assist engineering and curation. This repository contains a deliberately selected development history and a curated distribution, not a complete record of every experiment or development step. Selected historical commits retain original source authorship and author dates; curation is recorded separately.
+Daniel Jackson develops Synaptic Lens as an independent research project. AI tools assist engineering and curation. This repository presents selected development milestones and reusable research software. Selected historical commits retain original source authorship and author dates; curation is recorded separately.
 
 [Selected references](docs/REFERENCES.md) explain which sources informed the reader design and which algorithms/software the project uses. They distinguish design motivation from reproduction or validated capability. A [BibTeX bibliography](docs/references.bib) is included.
 
@@ -68,7 +68,7 @@ Daniel Jackson develops Synaptic Lens as an independent research project. AI too
 
 The source code uses the [AI Pubs research-use RAIL-S license, Version 0.1, March 2, 2023](LICENSE.md). Its permitted purpose is academic or research use only, subject to the full license and use restrictions. Retain the attribution in [NOTICE](NOTICE).
 
-The companion [AI Pubs research-use RAIL-M license, Version 0.1](LICENSE-MODEL.md) applies only to model files expressly designated in a release manifest or model card. It does not license complementary software or documentation, datasets, or third-party materials. Its inclusion here does not license absent checkpoints.
+The companion [AI Pubs research-use RAIL-M license, Version 0.1](LICENSE-MODEL.md) applies only to model files expressly designated in a release manifest or model card. Software, documentation, datasets and third-party materials retain their respective terms; each model release identifies the files covered by RAIL-M.
 
 Third-party dependencies and separately licensed materials retain their own licenses. Earlier copies remain subject to the terms under which they were provided.
 

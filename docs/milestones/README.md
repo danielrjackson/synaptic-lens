@@ -11,8 +11,7 @@ receiving any images.
 | [Arithmetic trajectories](adder-trajectory.md) | Lifetime trajectory reader (SYN88) | Canonical target weights, queries and query-aligned hidden activations | Correctness logits across training ages |
 | [Image-recognition targets](mnist-direct-weights.md) | Direct-weight MNIST comparison | Target parameters, or statistics of those parameters | Mean cross-entropy of a fixed target evaluation suite |
 
-These are different problems and architectures, not interchangeable versions
-of one universal pretrained model. Image-fed Lens experiments are not part of
+Each track has its own prediction problem, architecture and input contract. Image-fed Lens experiments are not part of
 this release.
 
 ## Code, checkpoints and evidence
@@ -31,11 +30,10 @@ and MNIST checkpoints and target populations, and two SYN53 development-endpoint
 exports. The sealed SYN53 holdout is not included. Inference commands use downloaded
 local files and manifest hashes; they do not automatically download models.
 
-The historical metrics are saved results, not a new reproduction. A successful
-checkpoint load or synthetic fixture demonstrates software compatibility, not
-the original study's accuracy. A useful complete reproduction additionally
+The milestone pages report saved historical metrics. Checkpoint loads and
+synthetic fixtures validate software compatibility. A useful complete reproduction additionally
 needs the matched target population, query/split manifests, labels and evaluator.
-Each page identifies what is and is not established.
+Each page documents its findings and evaluation scope.
 
 ## Distribution and rights
 
@@ -47,8 +45,7 @@ integrity manifests. Third-party materials retain their applicable notices. No r
 images or external target-generation code are granted by these milestone pages.
 
 For earlier arithmetic studies and the allocation comparison, see
-[Selected research results](../RESULTS.md). The milestone catalog is selective,
-not a claim that every research experiment is a supported release.
+[Selected research results](../RESULTS.md). The milestone catalog covers selected supported releases.
 
 ## Inference-only packaging
 

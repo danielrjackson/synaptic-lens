@@ -1,6 +1,6 @@
 # Public scope and validation
 
-This distribution selects reusable components, not an entire research workspace.
+This distribution collects reusable research components.
 The current integration includes exact affine/ReLU records, paired readers,
 value-blind scalar reconstruction, reader configuration, detached allocation
 policies, antithetic Adam updates, descriptive ranking/AUC, and CSV output.
@@ -10,15 +10,15 @@ whole-run fitting/evaluation and deterministic training-prefix continuation.
 The source modules retain their `synaptic_lens.<module>` import names.
 `ReaderConfig` and `DedicatedBoundaryReaderConfig` retain the serialization
 identity `synaptic_lens.transformer_lens`, even though their definitions live in
-`reader_config.py`. This does not promise compatibility with every experimental
-checkpoint or make untrusted pickle files safe to load.
+`reader_config.py`. Compatibility is checked for the documented checkpoint identities. Load only
+trusted artifacts with verified provenance.
 
 Tests cover numeric records, token/query contracts, boundary attention,
 masking, configuration serialization, policy detachment, allocation gradients,
 optimizer-state updates, ranking ties and output bytes. The optimizer fixture is
-an ordinary small neural network, not a study-specific controller. The small CPU
-examples need no stored model or dataset. Allocation weights are a mechanism
-demonstration, not evidence of improved training performance.
+an ordinary small neural network. The small CPU
+examples need no stored model or dataset. Allocation weights demonstrate the policy mechanism. Training-performance
+measurements are reported separately in the research results.
 
 ## Deliberate omissions
 
@@ -39,9 +39,9 @@ Run `python -m pytest`, `python examples/train_observer.py`, `python examples/in
 
 Validation used Python 3.13.3 and PyTorch 2.14.0 on CPU under Windows,
 and a separate clean installation resolved PyTorch 2.15.0 and NumPy 2.5.4.
-The original environment had a CUDA-enabled wheel, but these checks did not use a GPU.
+The original environment used the CPU path of a CUDA-enabled wheel.
 Other platforms and older PyTorch versions have not been independently checked
 for this curated distribution. The dependency floor conservatively reflects the
-validated version, not a claim that older versions cannot work.
+validated version.
 
-The milestone integration passed 95 core tests on Python 3.13/PyTorch 2.14 CPU. Independently reviewed focused tests passed as well. Local real-artifact smoke checks exercised all four stripped SYN53/MNIST exports and the SYN88 four-root fixture. These checks validate loader and inference paths, not a new full study evaluation.
+The milestone integration passed 95 core tests on Python 3.13/PyTorch 2.14 CPU. Independently reviewed focused tests passed as well. Local real-artifact smoke checks exercised all four stripped SYN53/MNIST exports and the SYN88 four-root fixture. These checks validate loader and inference paths.

@@ -19,11 +19,10 @@ The raw-weight observer receives 19,658 parameter coordinates. The statistics
 observer receives 192 statistics of those parameters. Images are used only by
 the target classifier to generate supervision/evaluation labels and to check
 data splits. Neither observer receives pixels during fitting or prediction.
-Scalar measured losses supply training supervision; this is not training
-without behavioral labels.
+Scalar measured losses supply the behavioral training supervision.
 
-The output is **one mean-risk estimate per target state**, not a digit label,
-per-image answer, per-query logit or identified internal mechanism.
+The output is **one mean-risk estimate per target state** over the fixed
+evaluation suite.
 
 ## Selected models and provenance
 
@@ -34,8 +33,8 @@ The public observer source matches that implementation after normalizing
 checkout line endings.
 
 The following sizes and hashes identify the **historical original bundles**,
-not the stripped downloadable inference exports. Export hashes are recorded in
-the Hugging Face release manifest; filenames are retained but bytes differ.
+with separate identities for the downloadable inference exports. Export hashes
+are recorded in the Hugging Face release manifest; exports retain the filenames.
 
 | Checkpoint | Parameters | Selected epoch | Bytes |
 | --- | ---: | ---: | ---: |
@@ -53,7 +52,7 @@ Both hashes match the saved result inventory. Both bundles passed restricted
 model class and CPU inference on a hash-verified real target checkpoint.
 For root 1007 at epoch 1, the raw observer predicted 0.958178 nats and the
 statistics observer 1.475826 nats; both matched the archived predictions within
-1e-6. This checks one target and loader path, not reproduction of the full study.
+1e-6. This validates the loader and inference path on one target.
 
 Each observer was trained for 200 epochs on 30 target states. Ten validation
 states selected the saved model; ten development states from two target roots
@@ -63,7 +62,7 @@ independent target runs. The official test set was never opened for this study.
 
 ## Saved development comparison
 
-These are historical recorded metrics, not a fresh rerun. Errors are in
+These are historical recorded metrics. Errors are in
 cross-entropy nats; lower is better.
 
 | Method | MAE | RMSE |
@@ -73,13 +72,10 @@ cross-entropy nats; lower is better.
 | Tensor-statistics Lens | 0.17140 | 0.21724 |
 | Privileged training-age diagnostic | 0.04324 | 0.05613 |
 
-The raw-weight observer did **not** beat the constant baseline here. Parameter
-statistics were much more useful, while training age was stronger still. The
-age diagnostic receives information unavailable to a weights-only observer;
-it is not an equivalent deployment method. The comparison illustrates why a
-trained checkpoint is not, by itself, evidence of useful weight-space
-understanding. It does not establish unseen-root generalization or a fresh
-confirmatory result.
+The raw-weight observer had higher error than the constant baseline. Parameter
+statistics reduced error substantially; training age provided the strongest
+diagnostic. Training age uses privileged metadata beyond the observers' inputs.
+These saved development results motivate further root-disjoint confirmation.
 
 ## Local inference and reproduction limits
 
@@ -92,21 +88,19 @@ python examples/predict_checkpoint.py --milestone mnist-raw --inference-export -
 
 Replace each path and hash placeholder with the verified artifact value. For
 the statistics observer, select `mnist-statistics` and its checkpoint. The
-command requires a real target checkpoint and coordinate schema; it does not
-substitute a zero vector or the saved feature mean and call that a useful
-demonstration. It performs no model download or training. A prediction alone
-does not measure accuracy against an observed target outcome.
+command requires a real target checkpoint and coordinate schema and runs local
+inference. Assess prediction accuracy against the target's measured outcome.
 
 Inference requires the exact coordinate ordering, tensor shapes and feature
 construction used by training, together with the bundle's saved feature and
-label normalization. The feature count alone is not enough to reconstruct
+label normalization. Preserve the complete input schema to reconstruct
 that contract. A representative target checkpoint and matching schema should
 accompany a prediction example.
 
 Recreating the comparison additionally requires the target population,
 root/epoch splits, evaluation-query identifiers, label-generation procedure
 and matching evaluator. The original runner had platform-specific operational
-dependencies; it is not presented here as a portable reproduction command.
+dependencies; porting that runner remains separate work.
 
 The linked model cards distinguish the weights-only observer's license
 from target-model, generator and dataset terms. No image data or external
