@@ -18,7 +18,7 @@ function render(){
  $('weights').replaceChildren();$('weight-table').replaceChildren();
  const max=Math.max(...actual.map(Math.abs),...pred.map(Math.abs),.001);
  for(let i=0;i<40;i++){
-  const pair=element('div',undefined,'weight-pair');pair.title=`${connection(i)}: actual ${fmt(actual[i])}; replacement ${fmt(pred[i])}`;
+  const pair=element('div',undefined,'weight-pair');pair.title=`${connection(i)}: original ${fmt(actual[i])}; replacement ${fmt(pred[i])}`;
   const short=i<10?`Left ${i}`:i<20?`Right ${i-10}`:i===20?'Bias':`Answer ${i-21}`;
   pair.append(element('span',short,'pair-label')); const plot=element('div',undefined,'pair-plot'); pair.append(plot);
   for(const [kind,value] of [['actual',actual[i]],['predicted',pred[i]]]){const bar=element('span',undefined,kind);bar.style.height=`${Math.abs(value)/max*48}%`;bar.style[value>=0?'bottom':'top']='50%';plot.append(bar);}
