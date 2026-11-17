@@ -2,3 +2,14 @@
 .stats strong{color:var(--ink)}
 
 #shuffle{padding:9px 15px;border:1px solid var(--teal);border-radius:6px;color:var(--ink);background:var(--paper);margin-bottom:12px}
+
+/* One shared connection label and frame per actual/replacement pair. */
+.weight-chart{grid-template-columns:repeat(10,minmax(0,1fr));height:auto;gap:9px;background:none}
+.weight-pair{height:112px;border:1px solid #b2c5b6;border-radius:7px;background:#f7faf5;padding:5px}
+.weight-pair:nth-child(21),.weight-pair:nth-child(22){border-left:1px solid #b2c5b6}
+.weight-pair .pair-label{position:static;display:block;width:auto;height:20px;text-align:center;font-size:11px;white-space:nowrap;color:var(--ink);background:none}
+.pair-plot{position:relative;height:76px;background:linear-gradient(transparent 49%,#96ab9b 49%,#96ab9b 51%,transparent 51%)}
+.pair-plot .actual{left:12%;width:32%}.pair-plot .predicted{right:12%;width:32%}
+.impact{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 12px}.impact>div{border:1px solid #aec4b4;border-radius:8px;padding:14px;background:#f4f8f1}.impact strong{display:block;font-size:28px}.impact span{font-size:13px}.impact>div:nth-child(2){background:#fff6e9;border-color:#d4b17a}
+#query-impact{padding:12px 0;border-top:1px solid #64836b;border-bottom:1px solid #64836b;font-size:14px;line-height:1.6;color:#fff}
+@media(max-width:760px){.weight-chart{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.weight-pair{height:104px;padding:4px}.pair-plot{height:68px}.impact{grid-template-columns:1fr}.impact>div{display:flex;align-items:center;justify-content:space-between;gap:12px}.impact strong{font-size:25px}.controls label{min-width:0;width:100%;flex-basis:100%}}
