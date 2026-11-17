@@ -34,6 +34,13 @@ downloads trained targets, fits the same reader architecture and compares your
 model with the featured Lens on the same queries. It saves your checkpoint,
 metrics and a spreadsheet-friendly prediction table.
 
+[Complete a missing adder neuron](docs/NEURON_COMPLETION.md) downloads a trained
+position-free Lens and an example target. Hide any neuron, inspect its predicted
+weights, and compare the target's answers before and after reconstruction. This
+is a separate weight-completion task from the correctness reader above.
+[Train your own completion reader](docs/TRAIN_NEURON_COMPLETION.md) uses public
+targets with root-isolated fitting and development sets.
+
 ## Install the current CUDA environment
 
 The maintained environment uses Python 3.15.2, uv 0.13.8 and PyTorch 2.15.0
