@@ -105,3 +105,7 @@ The companion [AI Pubs research-use RAIL-M license, Version 0.1](LICENSE-MODEL.m
 Third-party dependencies and separately licensed materials retain their own licenses. Earlier copies remain subject to the terms under which they were provided.
 
 If you use the software in research, please cite this repository and the revision used. [CITATION.cff](CITATION.cff) provides citation metadata.
+
+## Website source
+
+The website, blog, and browser demos live in [synaptic-lens-website](https://github.com/danielrjackson/synaptic-lens-website). The [public site](https://danielrjackson.github.io/synaptic-lens/) keeps its existing address. See [publishing details](docs/WEBSITE.md).

@@ -1,0 +1,79 @@
+name: Publish website
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/website.yml', 'docs/**']
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      pages: read
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.version.outputs.changed }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: library
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: danielrjackson/synaptic-lens-website
+          ref: main
+          path: website
+          persist-credentials: false
+      - id: version
+        name: Check for changed source
+        shell: python {0}
+        run: |
+          import json, os, subprocess, urllib.request
+          version = {name: subprocess.check_output(['git', '-C', path, 'rev-parse', 'HEAD'], text=True).strip() for name, path in [('website', 'website'), ('library', 'library')]}
+          try:
+              with urllib.request.urlopen('https://danielrjackson.github.io/synaptic-lens/site-build.json', timeout=15) as response:
+                  previous = json.load(response)
+          except Exception:
+              previous = None
+          changed = previous != version
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write('changed=' + str(changed).lower() + '\n')
+          with open('version.json', 'w') as f:
+              json.dump(version, f)
+      - if: steps.version.outputs.changed == 'true'
+        run: |
+          python3 website/scripts/check_neuron_demo.py
+          node website/scripts/check_neuron_impact.mjs
+          python3 -m venv /tmp/gallery-check
+          /tmp/gallery-check/bin/pip install Pillow==13.0.0
+          /tmp/gallery-check/bin/python website/scripts/check_training_gallery.py
+          python3 website/scripts/build.py --library library --output public
+          python3 website/scripts/check_links.py public
+          cp version.json public/site-build.json
+      - if: steps.version.outputs.changed == 'true'
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - if: steps.version.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: public
+  deploy:
+    if: needs.build.outputs.changed == 'true'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
