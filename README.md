@@ -33,7 +33,7 @@ across its training ages. [Model downloads](docs/DOWNLOADS.md) cover the four or
 Lens and target releases, with pinned revisions and cache reuse.
 
 The [image-recognition walkthrough](docs/IMAGE_EXAMPLE.md) runs the released MNIST
-tensor-statistics Lens. It reads a classifierâ€™s saved parameters and predicts
+tensor-statistics Lens. It reads a classifier's saved parameters and predicts
 its mean classification loss. Both walkthroughs default to CUDA.
 
 [Train your own Adder Lens](docs/TRAINING.md#train-an-adder-lens-and-compare-it-with-the-released-model)
