@@ -54,3 +54,7 @@ The same prediction was verified on CUDA and CPU. The public inference
 loader verifies checkpoint identity and uses restricted tensor loading.
 See [downloads](DOWNLOADS.md) for release licenses, cache details and other
 available checkpoints.
+
+## Custom training image gallery
+
+[Explore the redesigned custom training images](https://danielrjackson.github.io/synaptic-lens/examples/training-images.html): representative training samples from six synthetic families, with source provenance. These are separate from the MNIST model release above.
