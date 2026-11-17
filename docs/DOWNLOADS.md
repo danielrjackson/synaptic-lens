@@ -117,3 +117,16 @@ python -m unittest discover -s tests -p test_hub_downloads.py
 
 For Synaptic Lens, use `-s tests/core`. These tests check revision pinning,
 selection, hash/size failures, safe relative paths, and anonymous/offline options.
+
+## Neuron-completion reader
+
+This newer release has its own [pinned manifest](neuron-completion-manifest.json).
+The downloader verifies both file sizes and SHA-256 values:
+
+```sh
+uv run --locked --extra hub python scripts/download_completion.py
+uv run --locked python examples/complete_neuron.py --artifacts artifacts/neuron-completion
+```
+
+Use `--cache-dir` and `--local-files-only` on the download command for cache control.
+See the [completion walkthrough](NEURON_COMPLETION.md) for CPU inference and the model's input contract.
