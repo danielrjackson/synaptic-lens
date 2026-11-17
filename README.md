@@ -38,6 +38,8 @@ metrics and a spreadsheet-friendly prediction table.
 position-free Lens and an example target. Hide any neuron, inspect its predicted
 weights, and compare the target's answers before and after reconstruction. This
 is a separate weight-completion task from the correctness reader above.
+[Train your own completion reader](docs/TRAIN_NEURON_COMPLETION.md) uses public
+targets with root-isolated fitting and development sets.
 
 ## Install the current CUDA environment
 

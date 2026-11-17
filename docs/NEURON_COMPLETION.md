@@ -64,9 +64,7 @@ code uses LICENSE.md. Research provenance is identified by commit and hashes.
 
 This walkthrough runs pretrained completion inference. The existing
 `train_compare_adder.py` trains the separate correctness-prediction reader.
-The public SYN88 target population contains the underlying two-rule, eight-age
-root bundles needed for completion experiments. A standalone completion-training
-walkthrough and verified public-corpus adapter are not included in this release.
-Training must split whole roots before generating masks or permutations, fit
-normalization statistics on training roots only, and select on development roots.
-The reported completion evaluation cohort has already been consumed.
+[Train your own missing-neuron Lens](TRAIN_NEURON_COMPLETION.md) downloads
+root-isolated public targets, fits the same position-free architecture and reloads
+your selected checkpoint for a hands-on reconstruction comparison. It uses fitting
+and development roots; neither consumed evaluation cohort is used.

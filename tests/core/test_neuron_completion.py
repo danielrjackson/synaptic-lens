@@ -2,6 +2,7 @@ import hashlib
 
 import pytest
 import torch
+
 from synaptic_lens.neuron_completion import (
     REPRESENTATION_VERSION,
     NoSortLens,
