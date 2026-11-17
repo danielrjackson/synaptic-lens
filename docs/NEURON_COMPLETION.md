@@ -20,13 +20,13 @@ uv run --locked python examples/complete_neuron.py --artifacts artifacts/neuron-
 For downloaded artifacts in another location:
 
 ```sh
-python examples/complete_neuron.py --artifacts PATH_TO_ARTIFACTS --neuron 0
-python examples/complete_neuron.py --artifacts PATH_TO_ARTIFACTS --neuron 7 --device cpu
+uv run --locked python examples/complete_neuron.py --artifacts PATH_TO_ARTIFACTS --neuron 0
+uv run --locked python examples/complete_neuron.py --artifacts PATH_TO_ARTIFACTS --neuron 7 --device cpu
 ```
 
 CUDA is the default. CPU is an explicit option; floating-point results can differ
 slightly by backend. The example checks the pinned SHA-256 before restricted
-checkpoint loading. It prints the actual and predicted weights and all 100 answers
+checkpoint loading. It prints the original and predicted weights and all 100 answers
 before masking, after masking and after reconstruction. Try any neuron from 0 to 31.
 The selected target is the first saved evaluation target, root 896, addition rule.
 No score ranking was used. Its full original weights are supplied so you can compare

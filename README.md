@@ -2,6 +2,13 @@
 
 Research software for asking what a neural network's weights reveal about its behavior. The project builds structured representations of a target network and trains separate readers to answer questions about that target.
 
+[Explore in your browser](https://danielrjackson.github.io/synaptic-lens/explore/) ·
+[Reconstruct a neuron](https://danielrjackson.github.io/synaptic-lens/examples/neuron-completion.html) ·
+[Research and results](https://danielrjackson.github.io/synaptic-lens/research/)
+
+Start with the browser demos to inspect predictions without installing anything.
+For Python inference and training, choose a walkthrough below.
+
 ## Research highlights
 
 The featured Adder Lens predicted target-network correctness with **99.6167% accuracy** across 819,200 queries from 512 independent target-root families in its saved evaluation. It reads target weights, arithmetic queries and query-aligned hidden activations. See the [Adder walkthrough](docs/ADDER_EXAMPLE.md) for the model, benchmark and runnable example.
@@ -22,11 +29,11 @@ Other studies explore weights-only competence prediction, query-based attention 
 
 The [pretrained Adder walkthrough](docs/ADDER_EXAMPLE.md) downloads the featured
 SYN88 reader and one target root, verifies their hashes, and reports predictions
-across its training ages. [Model downloads](docs/DOWNLOADS.md) cover all four
-published Lens and target releases, with pinned revisions and cache reuse.
+across its training ages. [Model downloads](docs/DOWNLOADS.md) cover the four original
+Lens and target releases, with pinned revisions and cache reuse.
 
 The [image-recognition walkthrough](docs/IMAGE_EXAMPLE.md) runs the released MNIST
-tensor-statistics Lens. It reads a classifier’s saved parameters and predicts
+tensor-statistics Lens. It reads a classifier's saved parameters and predicts
 its mean classification loss. Both walkthroughs default to CUDA.
 
 [Train your own Adder Lens](docs/TRAINING.md#train-an-adder-lens-and-compare-it-with-the-released-model)
@@ -88,7 +95,7 @@ manifest references.
 
 ## Models and reproducibility
 
-Model files are hosted in four [public Hugging Face repositories](docs/ARTIFACTS.md). The pretrained walkthrough uses released artifacts; the small CPU fixtures and core unit tests generate their own inputs. Each milestone documents its checkpoints, data requirements and evaluation protocol.
+The [artifact catalog](docs/ARTIFACTS.md) links the released readers, target populations, neuron-completion model and custom-image classifiers on Hugging Face. The pretrained walkthrough uses released artifacts; the small CPU fixtures and core unit tests generate their own inputs. Each milestone documents its checkpoints, data requirements and evaluation protocol.
 
 ## Project and history
 

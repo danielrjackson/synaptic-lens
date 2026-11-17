@@ -9,7 +9,7 @@ Install the repository's CUDA and Hub dependencies using the main installation
 instructions. From the checkout:
 
 ```sh
-python examples/train_neuron_completion.py --output runs/my-completion
+uv run --locked --extra hub python examples/train_neuron_completion.py --output runs/my-completion
 ```
 
 The script downloads 64 fitting and 16 development roots from the pinned public
@@ -28,7 +28,7 @@ Lens for reconstruction into the original target.
 For a short, explicit CPU plumbing check using public targets:
 
 ```sh
-python examples/train_neuron_completion.py --output runs/cpu-smoke --device cpu --updates 2 --fit-roots 1 --development-roots 1
+uv run --locked --extra hub python examples/train_neuron_completion.py --output runs/cpu-smoke --device cpu --updates 2 --fit-roots 1 --development-roots 1
 ```
 
 This still uses the full architecture. The automated unit test uses a tiny synthetic
@@ -42,7 +42,7 @@ The output directory contains:
   `OrganicCheckpointReader`.
 - `training-report.json`: selected update, development curve, target revision and
   hashes, checkpoint SHA-256, and the first development target's original, zeroed
-  and reconstructed answers. It includes actual and predicted weights.
+  and reconstructed answers. It includes original and predicted weights.
 - `example-target.pt`: that development example in original coordinates.
 
 The script reloads the saved reader with its computed hash before producing the
@@ -67,6 +67,6 @@ reader = OrganicCheckpointReader(run / "your-reader.pt", report["checkpoint_sha2
 
 Increase `--fit-roots` up to 768, `--development-roots` up to 128, or `--updates`
 (up to 20,000) for a longer run. Choose a new output directory each time. This entry
-point is an outsider training walkthrough with fixed-budget development selection;
+point provides fixed-budget training with development-set selection;
 it does not recreate the three-seed audited benchmark or claim its published score.
 There is no automatic resume or GPU sensor monitoring in this standalone script.

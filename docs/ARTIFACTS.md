@@ -11,6 +11,21 @@ Use a pinned revision and verify the manifest SHA-256 values for repeatable down
 | [MNIST Lens](https://huggingface.co/danielrjackson/synaptic-lens-mnist) | Two inference-only Lens checkpoints: raw-weight and parameter-statistics observers | `1acd95aaffda8fc148aa362a0573f72d65dddea3` |
 | [MNIST targets](https://huggingface.co/danielrjackson/synaptic-lens-targets-mnist) | 300 target checkpoints across 12 trajectories, coordinate schema and trajectory metadata | `f422682c970bdf64c8b30d24c2cf7bac8ce3ef6c` |
 
+## Newer releases
+
+The table above pins the original study exports. Later models have their own
+release identities and instructions:
+
+- [Missing-neuron Adder Lens](NEURON_COMPLETION.md): a position-free Transformer
+  that reconstructs a hidden neuron. The [completion manifest](neuron-completion-manifest.json)
+  pins the reader and example target at Adder revision
+  `9d8bf578fd456d7475afa00e627d13178c24faab`. Use
+  `scripts/download_completion.py` through the walkthrough.
+- [Custom-image targets](https://huggingface.co/danielrjackson/synaptic-lens-targets-custom-images/tree/81f312e0f32e00fdbf02e027c711ef21044d82ee):
+  ten trained image classifiers with a CUDA-default prediction example. The model
+  card describes the custom tasks, model files and commands. These are the target
+  classifiers that Lens studies. The MNIST Lens readers remain in the table above.
+
 ## Using the files
 
 Read each model card and manifest first. Download the selected files locally and

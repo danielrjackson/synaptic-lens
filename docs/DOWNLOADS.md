@@ -1,6 +1,6 @@
 # Download released models from Hugging Face
 
-The four published model repositories separate Lens readers from target networks.
+This downloader covers four original releases, separating Lens readers from target networks.
 Each checkout pins their complete Hugging Face commit IDs and export-manifest
 SHA-256 values in [releases.json](releases.json).
 
@@ -10,6 +10,11 @@ SHA-256 values in [releases.json](releases.json).
 | Image-network Lens readers | `synaptic-lens-mnist` |
 | Arithmetic target population | `synaptic-lens-targets-adder` |
 | MNIST target trajectories | `synaptic-lens-targets-mnist` |
+
+For the newer missing-neuron reader, use the dedicated
+[completion walkthrough](NEURON_COMPLETION.md) and its pinned manifest.
+The [artifact catalog](ARTIFACTS.md) also links the custom-image target release.
+These additional exports are outside this downloader's four-release registry.
 
 ## Install the download client
 
