@@ -7,10 +7,10 @@ published root lists as data, checked for exact parity with the factory. Core
 Lens imports and workflows do not require the factory.
 
 The optional `targets` extra is bound to the public factory Git revision
-`69d0a37e54dd4dc466aff8ec59aea75f6c6dc4eb`, tree
-`cf81ddcda3ba33c09b602b75c405c558ae39a424`, rather than an assumed PyPI release.
+`2d04689923d7d970f7103d1354dcedff4e8f72e0`, tree
+`3cda7c53b9fcc275559935820c145ecc4f3757ed`, rather than an assumed PyPI release.
 The factory's Windows CPython 3.13 CPU lock shares Lens's NumPy 2.5.5 and
-other core pins. Core installation does not require the factory. For the
+other core pins, including filelock 4.3.1 and packaging 26.4. Core installation does not require the factory. For the
 current locked CUDA environment, install generation support with
 `uv sync --locked --extra targets` (add `--extra test` to run tests).
 

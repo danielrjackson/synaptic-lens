@@ -5,11 +5,11 @@
   "import_name": "synaptic_lens",
   "tests": "tests/core",
   "sha256": {
-    "pyproject.toml": "79a5a282be91596d775f161eb8fa6fbddb65e42bc066d56af09b525949e86ced",
-    "requirements/windows-cpu.in": "8f81b28cef4e8f2102b299afd80e0effa9091f5378075229de4efef849b7de2f",
-    "requirements/windows-cpu.txt": "b2983e4bae27723806b8554e2651de6e13a3985ecddf21bf0665a0d15c345f10",
+    "pyproject.toml": "79717f85ab41e700be207825736838b54ccccc017bd0bb4821dddcfdf9ea3a69",
+    "requirements/windows-cpu.in": "25e10ab5164fec47dab1b832559d525e76d2d596ae5ff3960ae178c64c0d4853",
+    "requirements/windows-cpu.txt": "4732b52fbc0725e54ae084253e352cdcb12af37bdf2c1c77c90bbc31a2daecba",
     "requirements/installer.in": "c13fd5ccc33921bb99e3146340f574a59daa73cc42f3876bf0ab95df9bee416d",
     "requirements/installer.txt": "2d8c5e60bcbba6b84f429b5674a0c870940d4869b6087c7f6783e875b7597c97",
-    "requirements/companion.json": "82dcd619122ac2a608e873cf32e0adb52938b24e6e3ba96ec8fb6602c5f6ad0d"
+    "requirements/companion.json": "eb107c74a8a9fd3ee759deaa22ccaf65cc7f4ec4c76269f188d1fb78eba90c3a"
   }
 }
