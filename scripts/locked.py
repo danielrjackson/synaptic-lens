@@ -108,8 +108,8 @@ def main():
         if env.exists():
             raise FileExistsError("Use a new environment path; existing environments are preserved")
         uv_version = subprocess.check_output([UV, "--version"], text=True).split()[1]
-        if uv_version != "0.7.4":
-            raise RuntimeError("Install the hash-locked uv 0.7.4 bootstrap first")
+        if uv_version != "0.13.9":
+            raise RuntimeError("Install the hash-locked uv 0.13.9 bootstrap first")
         run(UV, "--no-config", "venv", "--python", sys.executable, env)
         dependencies = companion / "requirements/windows-cpu.txt" if companion else REQ / "windows-cpu.txt"
         run(UV, "--no-config", "pip", "sync", "--python", python, "--require-hashes", "--only-binary", ":all:", dependencies)
