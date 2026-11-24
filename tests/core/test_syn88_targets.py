@@ -1,6 +1,11 @@
-import numpy as np
+# Target generation is an explicitly optional companion-package capability.
 import pytest
+
+pytest.importorskip("synaptic_lens_target_model_factory")
+
+import numpy as np
 import torch
+from synaptic_lens_target_model_factory.arithmetic.syn88 import split_roots as factory_split_roots
 from synaptic_lens.syn88_targets import AGES, generate_root, split_roots
 from synaptic_lens.targets import addition_suite, restore_adder
 
@@ -8,7 +13,7 @@ from synaptic_lens.targets import addition_suite, restore_adder
 def test_partitions_are_root_disjoint():
     splits = split_roots()
     assert [len(splits[k]) for k in ("train", "validation", "test")] == [1536, 256, 512]
-    assert sorted(sum(splits.values(), [])) == list(range(2304))
+    assert splits == factory_split_roots()
 
 
 def test_generated_root_and_native_labels(tmp_path):
