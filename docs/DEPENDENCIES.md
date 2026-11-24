@@ -3,7 +3,7 @@
 Validated upgrade snapshot: 2026-11-16, Windows x64.
 
 - CPython 3.15.2 (standard GIL build).
-- uv 0.13.8; the project checks this version before resolution/synchronization.
+- uv 0.13.9 is now required; the project checks this version before resolution/synchronization.
 - PyTorch 2.15.0+cu134, CUDA runtime 13.4, NumPy 2.5.5.
 - pytest 9.2.0, setuptools 84.2.1, optional huggingface-hub 2.4.0.
 - `uv.lock` records all resolved transitive versions and archive hashes.
@@ -17,7 +17,7 @@ The Python compatibility floor remains 3.13; `.python-version` selects the curre
 
 ## Setup
 
-Install uv 0.13.8 from its official release/package source, then run:
+Install uv 0.13.9 from its official release/package source, then run:
 
 ```powershell
 uv python install 3.15.2
@@ -40,7 +40,7 @@ lock; `uv sync` restores the locked CUDA selection.
 ## Updating
 
 Review official release and compatibility information, update `.python-version`,
-intentional package floors and the uv requirement, then use `uv lock --upgrade`.
+intentional package floors and the uv requirement, then use `uv lock --upgrade-package NAME` for each reviewed package.
 Review the lock diff, synchronize a fresh environment, run all core tests, examples
 and the bounded CUDA parity check. Retain historical model artifacts and scientific
 results unchanged; a modern software environment is separately validated.
@@ -75,7 +75,7 @@ accelerator and operating-system profiles are not covered by these locks.
 
 `requirements/windows-cpu.in` intentionally pins every direct and transitive
 runtime, test and build dependency. `windows-cpu.txt` contains archive SHA-256
-hashes from package-index metadata. `installer.txt` similarly pins uv 0.7.4.
+hashes from package-index metadata. `installer.txt` pins only the Windows x64 wheel of uv 0.13.9.
 `integrity.json` binds the input/output bytes and LF-normalized pyproject metadata.
 Hashes establish artifact identity, not a package's safety or authorship.
 
@@ -84,7 +84,7 @@ From a fresh checkout in PowerShell, with Windows x64 Python 3.13 installed:
 ```powershell
 if (Test-Path .venv-installer) { throw "Choose a new installer environment path" }
 py -3.13 -m venv .venv-installer
-.\.venv-installer\Scripts\python.exe -m pip install --require-hashes --only-binary=:all: -r requirements/installer.txt
+.\.venv-installer\Scripts\python.exe -m pip --isolated install --index-url https://pypi.org/simple --no-deps --require-hashes --only-binary=:all: -r requirements/installer.txt
 .\.venv-installer\Scripts\python.exe scripts/locked.py install
 .\.venv-installer\Scripts\python.exe scripts/locked.py test
 ```
@@ -118,12 +118,18 @@ revision whose dependency lock includes every core pin.
 ### Reviewed CPU updates
 
 Do not regenerate against unconstrained newest dependencies. Edit the intentional
-pins, assess the affected packages and then regenerate with uv 0.7.4:
+pins, assess the affected packages and then regenerate the dependency lock with uv 0.13.9:
 
 ```powershell
 uv pip compile requirements/windows-cpu.in --python-version 3.13 --python-platform windows --generate-hashes --no-build --no-header --no-annotate -o requirements/windows-cpu.txt
-uv pip compile requirements/installer.in --python-version 3.13 --python-platform windows --generate-hashes --no-build --no-header --no-annotate -o requirements/installer.txt
 ```
+
+For an installer update, verify the official Astral release and PyPI Trusted
+Publishing details. Compare the SHA-256 of the downloaded
+`uv-<version>-py3-none-win_amd64.whl` to PyPI before execution. Record only
+that wheel hash in `installer.txt`, using the same exact pin as `installer.in`.
+The gallery workflow similarly installs only the reviewed Linux x64 CPython 3.13
+Pillow wheel pinned in `requirements/website-gallery.txt`.
 
 Refresh `integrity.json` hashes for changed inputs, outputs and normalized
 pyproject, review the exact lock diff, then repeat a fresh locked installation,
