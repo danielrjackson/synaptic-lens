@@ -1,10 +1,12 @@
 """Compatibility entry point for the companion factory's SYN88 generator.
 
 Core Lens inference/training imports need no factory dependency. Generation is
-provided by the optional ``targets`` extra; this module owns no generator loop.
+provided by the optional ``targets`` extra. Published root IDs are static metadata.
 """
 
 from importlib import import_module
+
+from ._syn88_population import ROOT_SPLITS
 
 AGES = (0, 1, 2, 5, 10, 25, 50, 100)
 RULES = ("addition", "alternate")
@@ -16,7 +18,7 @@ def _factory():
     except ModuleNotFoundError as error:
         if error.name and error.name.startswith("synaptic_lens_target_model_factory"):
             raise ImportError(
-                "SYN88 generation requires the companion target factory; install it before the synaptic-lens targets extra"
+                "SYN88 generation requires the companion target factory; install the synaptic-lens targets extra"
             ) from error
         raise
     if tuple(module.AGES) != AGES or tuple(module.RULES) != RULES:
@@ -25,7 +27,8 @@ def _factory():
 
 
 def split_roots():
-    return _factory().split_roots()
+    """Return fresh lists for the fixed published population partitions."""
+    return {name: list(roots) for name, roots in ROOT_SPLITS}
 
 
 def generate_root(root_index, device="cpu"):

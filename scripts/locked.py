@@ -126,7 +126,14 @@ def main():
             run(python, "-I", "-c", "import synaptic_lens_target_model_factory as f,pathlib,sys; assert pathlib.Path(f.__file__).is_relative_to(pathlib.Path(sys.prefix)); print(f.__file__)")
             run(sys.executable, companion / "scripts/locked.py", "test", "--environment", env)
         os.environ["SL_LOCKED_PACKAGE"] = package
-        run(python, "-I", "-m", "pytest", "-q", "-o", "pythonpath=", profile["tests"])
+        # Import the installed package before example entry points add their
+        # checkout-only bootstrap paths during pytest collection.
+        run(
+            python, "-I", "-c",
+            "import importlib, sys; importlib.import_module(sys.argv[1]); "
+            "import pytest; raise SystemExit(pytest.main(sys.argv[2:]))",
+            package, "-q", "-o", "pythonpath=", profile["tests"],
+        )
 
 
 if __name__ == "__main__":

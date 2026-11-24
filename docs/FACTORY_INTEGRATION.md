@@ -1,9 +1,10 @@
 # Canonical target-factory integration
 
 The companion `synaptic-lens-target-model-factory` package owns SYN88 generation,
-root splits, label maps and target lineage. SL's existing
-`synaptic_lens.syn88_targets` module and CLI are lazy compatibility forwarders.
-Core Lens imports and workflows do not require the factory.
+label maps and target lineage. SL's existing generation API and CLI are lazy
+compatibility forwarders. For existing population readers, Lens bundles the fixed
+published root lists as data, checked for exact parity with the factory. Core
+Lens imports and workflows do not require the factory.
 
 The optional `targets` extra is bound to the reviewed factory Git revision
 `aec5e0b9558bbecc654504d91aedabf124901bc6`, tree
@@ -11,16 +12,20 @@ The optional `targets` extra is bound to the reviewed factory Git revision
 This revision is publicly reachable. Its Windows CPU profile currently pins NumPy
 2.5.4, so it cannot pass the exact combined gate with Lens's NumPy 2.5.5 floor.
 The combined commands below are reserved for a compatible, reviewed factory pin.
-Core installation does not require the factory.
+Core installation does not require the factory. For the current locked CUDA
+environment, install generation support with `uv sync --locked --extra targets`
+(and add `--extra test` to run tests).
 
 ## Hash-locked combined installation
 
 First follow the isolated installer bootstrap in [dependency setup](DEPENDENCIES.md).
-Clone the public factory once a compatible reviewed pin is available:
+Once this Lens checkout pins a compatible, reviewed factory revision, clone
+the public factory and check out that exact commit:
 
 ```powershell
 git clone https://github.com/danielrjackson/synaptic-lens-target-model-factory.git ../synaptic-lens-target-model-factory
-git -C ../synaptic-lens-target-model-factory checkout --detach aec5e0b9558bbecc654504d91aedabf124901bc6
+$factoryRevision = (Get-Content requirements/companion.json -Raw | ConvertFrom-Json).commit
+git -C ../synaptic-lens-target-model-factory checkout --detach $factoryRevision
 .\.venv-installer\Scripts\python.exe scripts/locked.py install --environment .venv-combined --factory-checkout ../synaptic-lens-target-model-factory
 .\.venv-installer\Scripts\python.exe scripts/locked.py test --environment .venv-combined --factory-checkout ../synaptic-lens-target-model-factory
 ```

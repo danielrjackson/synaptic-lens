@@ -7,7 +7,7 @@ share 2,304 independent initialization roots.
 
 ## Generate new target lifetimes
 
-Install this repository's dependencies, then run:
+Install the optional [pinned target factory](../FACTORY_INTEGRATION.md) with the `targets` extra, then run:
 
 ```console
 python -m synaptic_lens.syn88_targets ./generated-targets --count 1
