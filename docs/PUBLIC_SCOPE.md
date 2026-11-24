@@ -39,4 +39,4 @@ The current environment uses Python 3.15.2, PyTorch 2.15.0+cu134 and NumPy
 are documented in [Dependencies](DEPENDENCIES.md). Historical software checks
 used earlier Python/PyTorch environments; their original evidence is retained.
 
-The milestone integration passed 95 core tests on Python 3.13/PyTorch 2.14 CPU. Independently reviewed focused tests passed as well. Local real-artifact smoke checks exercised all four stripped SYN53/MNIST exports and the SYN88 four-root fixture. These checks validate loader and inference paths.
+In a historical milestone check, the integration passed 95 core tests on Python 3.13/PyTorch 2.14 CPU. Independently reviewed focused tests passed as well. Local real-artifact smoke checks exercised all four stripped SYN53/MNIST exports and the SYN88 four-root fixture. These checks validate loader and inference paths.

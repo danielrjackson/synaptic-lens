@@ -1,7 +1,6 @@
 """Artifact-free loader fixtures; these random tensors are not research weights."""
 import hashlib
 import pickle
-from copy import deepcopy
 import pytest
 import torch
 from torch.torch_version import TorchVersion
