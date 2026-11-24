@@ -788,7 +788,7 @@ requires-dist = [
     { name = "huggingface-hub", marker = "extra == 'hub'", specifier = ">=2.4" },
     { name = "numpy", specifier = ">=2.5.5" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=9.2" },
-    { name = "synaptic-lens-target-model-factory", marker = "extra == 'targets'", git = "https://github.com/danielrjackson/synaptic-lens-target-model-factory.git?rev=aec5e0b9558bbecc654504d91aedabf124901bc6" },
+    { name = "synaptic-lens-target-model-factory", marker = "extra == 'targets'", git = "https://github.com/danielrjackson/synaptic-lens-target-model-factory.git?rev=69d0a37e54dd4dc466aff8ec59aea75f6c6dc4eb" },
     { name = "torch", marker = "sys_platform != 'linux' and sys_platform != 'win32'", specifier = ">=2.15" },
     { name = "torch", marker = "sys_platform == 'linux' or sys_platform == 'win32'", specifier = ">=2.15", index = "https://download.pytorch.org/whl/cu134" },
 ]
@@ -797,7 +797,7 @@ provides-extras = ["test", "hub", "targets"]
 [[package]]
 name = "synaptic-lens-target-model-factory"
 version = "0.1.0"
-source = { git = "https://github.com/danielrjackson/synaptic-lens-target-model-factory.git?rev=aec5e0b9558bbecc654504d91aedabf124901bc6#aec5e0b9558bbecc654504d91aedabf124901bc6" }
+source = { git = "https://github.com/danielrjackson/synaptic-lens-target-model-factory.git?rev=69d0a37e54dd4dc466aff8ec59aea75f6c6dc4eb#69d0a37e54dd4dc466aff8ec59aea75f6c6dc4eb" }
 dependencies = [
     { name = "numpy" },
     { name = "pillow" },

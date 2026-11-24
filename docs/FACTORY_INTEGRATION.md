@@ -6,21 +6,18 @@ compatibility forwarders. For existing population readers, Lens bundles the fixe
 published root lists as data, checked for exact parity with the factory. Core
 Lens imports and workflows do not require the factory.
 
-The optional `targets` extra is bound to the reviewed factory Git revision
-`aec5e0b9558bbecc654504d91aedabf124901bc6`, tree
-`1d4798eb1b2843d5945ee00aab0feb097f8de3ef`, rather than an assumed PyPI release.
-This revision is publicly reachable. Its Windows CPU profile currently pins NumPy
-2.5.4, so it cannot pass the exact combined gate with Lens's NumPy 2.5.5 floor.
-The combined commands below are reserved for a compatible, reviewed factory pin.
-Core installation does not require the factory. For the current locked CUDA
-environment, install generation support with `uv sync --locked --extra targets`
-(and add `--extra test` to run tests).
+The optional `targets` extra is bound to the public factory Git revision
+`69d0a37e54dd4dc466aff8ec59aea75f6c6dc4eb`, tree
+`cf81ddcda3ba33c09b602b75c405c558ae39a424`, rather than an assumed PyPI release.
+The factory's Windows CPython 3.13 CPU lock shares Lens's NumPy 2.5.5 and
+other core pins. Core installation does not require the factory. For the
+current locked CUDA environment, install generation support with
+`uv sync --locked --extra targets` (add `--extra test` to run tests).
 
 ## Hash-locked combined installation
 
 First follow the isolated installer bootstrap in [dependency setup](DEPENDENCIES.md).
-Once this Lens checkout pins a compatible, reviewed factory revision, clone
-the public factory and check out that exact commit:
+Clone the public factory and check out the exact reviewed commit:
 
 ```powershell
 git clone https://github.com/danielrjackson/synaptic-lens-target-model-factory.git ../synaptic-lens-target-model-factory
