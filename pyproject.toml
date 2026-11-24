@@ -12,7 +12,7 @@ dependencies = ["torch>=2.15", "numpy>=2.5.5"]
 [project.optional-dependencies]
 test = ["pytest>=9.2"]
 hub = ["huggingface-hub>=2.4"]
-targets = ["synaptic-lens-target-model-factory @ git+https://github.com/danielrjackson/synaptic-lens-target-model-factory.git@69d0a37e54dd4dc466aff8ec59aea75f6c6dc4eb"]
+targets = ["synaptic-lens-target-model-factory @ git+https://github.com/danielrjackson/synaptic-lens-target-model-factory.git@2d04689923d7d970f7103d1354dcedff4e8f72e0"]
 
 [build-system]
 requires = ["setuptools==84.2.1"]
