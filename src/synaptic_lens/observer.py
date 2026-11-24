@@ -27,17 +27,6 @@ def split_runs(count, seed=20260915):
     }
 
 
-def checkpoint_sample(last_step, count=32):
-    """
-    Keep more detail early in learning; retain all checkpoints on disk.
-
-    This rule uses step indices, not labels. It is chosen before looking at test
-    losses. Primary metrics weight these selected snapshots equally within each run.
-    """
-    indices = torch.logspace(0, math.log10(last_step + 1), count).round().long() - 1
-    return torch.unique(torch.cat((torch.tensor([0, last_step]), indices))).sort().values
-
-
 def standardize_fit(x):
     # This MUST be fit on training runs only. Fitting on the full population
     # would allow evaluation data to influence the observer's preprocessing.

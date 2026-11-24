@@ -63,6 +63,12 @@ uv run --locked --extra test pytest
 
 A separate [hash-locked Windows CPU profile](docs/DEPENDENCIES.md#locked-windows-cpu-environment) validates installed wheels without requiring CUDA.
 
+If you already have a compatible environment, run the same core tests from the repository root:
+
+```sh
+python -m pytest tests/core -q -o pythonpath=src
+```
+
 ## Try the small CPU fixtures
 
 These self-contained examples run on CPU:
@@ -75,21 +81,15 @@ uv run --locked python examples/synthetic_allocation.py
 
 The learned-observer example generates small addition networks, keeps whole target runs in separate train/validation/test partitions, and fits raw/structured observers against statistics-ridge and train-mean controls. It uses a fixed small CPU budget and automatically removes temporary targets.
 
-The record-inspection example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs. The inputs are generated locally.
+The record-inspection example constructs a tiny random network locally, records its parameters, and checks that evaluating those records exactly reproduces the network's outputs.
 
 The allocation example demonstrates normalized allocation weights computed from synthetic losses. [Public scope and validation](docs/PUBLIC_SCOPE.md) describes the included interfaces and test coverage.
-
-To run the selected core tests from the repository root:
-
-```sh
-python -m pytest tests/core -q -o pythonpath=src
-```
 
 For platform-specific PyTorch installation options, see the [official installation guide](https://pytorch.org/get-started/locally/).
 
 ## Trained Lens milestones
 
-The [milestone catalog](docs/milestones/README.md) covers arithmetic readers and weights-only observers of image-recognition targets. Each page describes the reader's inputs, trained checkpoints, results and inference commands. Download the checkpoints and target populations from [Hugging Face](docs/ARTIFACTS.md).
+The [milestone catalog](docs/milestones/README.md) covers arithmetic readers and weights-only observers of image-recognition targets. Each page describes the reader's inputs, trained checkpoints, results and inference commands.
 
 See [training and development workflows](docs/TRAINING.md) for the bounded
 trajectory optimizer, root-isolated MNIST mean-risk fitting API and exact release
